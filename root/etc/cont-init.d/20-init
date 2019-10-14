@@ -1,0 +1,44 @@
+#!/usr/bin/with-contenv bash
+
+params=""
+config_dir=/config
+data_dir=/data
+filters_file="$config_dir/filters"
+
+if [[ ! -z ${DUPLICACY_PASSWORD} ]]; then
+    params=-e
+fi
+
+if [[ ! -z ${CHUNK_SIZE} ]]; then
+    params="$params -chunk-size $CHUNK_SIZE"
+fi
+
+if [[ ! -z ${MAX_CHUNK_SIZE} ]]; then
+    params="$params -max-chunk-size $MAX_CHUNK_SIZE"
+fi
+
+if [[ ! -z ${MIN_CHUNK_SIZE} ]]; then
+    params="$params -min-chunk-size $MIN_CHUNK_SIZE"
+fi
+
+params="$params -pref-dir $config_dir -repository $data_dir $SNAPSHOT_ID $STORAGE_URL"
+
+duplicacy init $params
+exitcode=$?
+
+if [ $exitcode -ne 0 ]; then
+    exit $exitcode
+fi
+
+IFS=';'
+
+if [[ ! -z "${FILTER_PATTERNS}" ]]; then
+    read -ra filters <<< "$FILTER_PATTERNS"
+    rm -f "$filters_file"
+    touch "$filters_file"
+    for filter in "${filters[@]}"; do
+        echo "$filter" >> "$filters_file"
+    done
+fi
+
+exit 0

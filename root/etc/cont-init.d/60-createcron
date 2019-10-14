@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+
+cron_dir="/var/spool/cron/crontabs"
+cron_file="$cron_dir/root"
+
+rm -f "$cron_file"
+touch "$cron_file"
+
+if [[ "${BACKUP_CRON}" ]]; then
+    echo "$BACKUP_CRON /app/backup.sh" >> "$cron_file"
+fi
+
+exit 0

@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+
+if [[ $BACKUP_IMMEDIATELY == "yes" ]] || [[ $BACKUP_IMMEDIATELY == "YES" ]]; then
+    /app/backup.sh
+fi
+
+exit 0

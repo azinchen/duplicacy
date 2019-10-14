@@ -27,7 +27,7 @@ config_dir=/config
 cd $config_dir
 
 echo "*** Backup ***"
-duplicacy backup
+duplicacy backup -threads $THREADS_NUM
 exitcode=$?
 
 if [[ $exitcode -eq 0 ]] && [[ ! -z "${PRUNE_KEEP_POLICIES}" ]]; then
@@ -39,12 +39,12 @@ if [[ $exitcode -eq 0 ]] && [[ ! -z "${PRUNE_KEEP_POLICIES}" ]]; then
     done
 
     echo "*** Prune chunks by policies ***"
-    sh -c "duplicacy prune $command"
+    sh -c "duplicacy prune $command -threads $THREADS_NUM"
     exitcode=$?
 
     if [[ $exitcode -eq 0 ]]; then
         echo "*** Delete marked chunks ***"
-        duplicacy prune
+        duplicacy prune -exhaustive -threads $THREADS_NUM
         exitcode=$?
     fi
 fi

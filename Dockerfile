@@ -4,7 +4,8 @@ LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 
 ENV BACKUP_CRON="" \
     SNAPSHOT_ID="" \
-    STORAGE_URL=""
+    STORAGE_URL="" \
+    THREADS_NUM="1"
 
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress upgrade && \

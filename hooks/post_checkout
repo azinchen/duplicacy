@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[[ "${DOCKER_TAG}" == "latest" ]] && \
+[[ "${DOCKER_TAG}" == "latest" ]] || [[ "${DOCKER_TAG}" == "edge" ]] && \
     { echo 'qemu-user-static: Download not required for this arch'; exit 0; }
 
 TAGS_API="https://api.github.com/repos/multiarch/qemu-user-static/tags"

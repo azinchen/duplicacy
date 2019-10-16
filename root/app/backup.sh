@@ -19,7 +19,7 @@ converts()
    fi
 }
 
-echo ========== Run backup job ==========
+echo ========== Run backup job at `date` ==========
 
 start=$(date +%s.%N)
 config_dir=/config

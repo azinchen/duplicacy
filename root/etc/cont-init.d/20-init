@@ -8,7 +8,7 @@ fi
 params=""
 config_dir=/config
 data_dir=/data
-filters_file="$config_dir/filters"
+filters_file=$config_dir/filters
 
 if [[ ! -z ${DUPLICACY_PASSWORD} ]]; then
     params=-e
@@ -39,7 +39,7 @@ if [[ ! -f $filters_file ]] && [[ ! -z "${FILTER_PATTERNS}" ]]; then
     IFS=';'
     read -ra filters <<< "$FILTER_PATTERNS"
     for filter in "${filters[@]}"; do
-        echo "$filter" >> "$filters_file"
+        echo "$filter" >> $filters_file
     done
 fi
 

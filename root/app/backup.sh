@@ -63,10 +63,10 @@ duration=$(echo "$(date +%s.%N) - $start" | bc)
 subject=""
 
 if [ $exitcode -eq 0 ]; then
-    echo Backup COMPLETED, total time $(converts $duration) | tee -a $log_file
+    echo Backup COMPLETED, duration $(converts $duration) | tee -a $log_file
     subject="duplicacy job COMPLETED, id $SNAPSHOT_ID url $STORAGE_URL"
 else
-    echo Backup FAILED, code $exitcode, total time $(converts $duration) | tee -a $log_file
+    echo Backup FAILED, code $exitcode, duration $(converts $duration) | tee -a $log_file
     subject="duplicacy job FAILED, id $SNAPSHOT_ID url $STORAGE_URL"
 fi
 

@@ -11,8 +11,8 @@ touch $revaliases_file
 
 echo FromLineOverride=YES >> $ssmtp_conf_file
 
-if [[ ! -z ${EMAIL_SENDER_EMAIL} ]]; then
-    echo "root:$EMAIL_SENDER_EMAIL" >> $revaliases_file
+if [[ ! -z ${EMAIL_FROM} ]]; then
+    echo "root:$EMAIL_FROM" >> $revaliases_file
 fi
 
 if [[ ! -z ${EMAIL_USE_TLS} ]]; then

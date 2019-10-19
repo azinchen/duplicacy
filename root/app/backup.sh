@@ -23,7 +23,7 @@ log_dir=""
 log_file=/dev/null
 mail_file=/dev/null
 
-if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_RECIPIENT_EMAIL} ]]; then
+if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
     log_dir=`mktemp -d`
     log_file=$log_dir/backup.log
     mail_file=$log_dir/mailbody.log
@@ -70,8 +70,8 @@ else
     subject="duplicacy job FAILED, id $SNAPSHOT_ID url $STORAGE_URL"
 fi
 
-if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_RECIPIENT_EMAIL} ]]; then
-    echo "To: $EMAIL_RECIPIENT_EMAIL" >> $mail_file
+if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
+    echo "To: $EMAIL_TO" >> $mail_file
     echo "Subject: $subject" >> $mail_file
     echo "" >> $mail_file
 
@@ -90,7 +90,7 @@ if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_RECIPIENT_EMAIL} ]]; then
         echo $zipout
     fi
 
-    cat $mail_file | (cat - && uuencode $zip_log_file backuplog.zip) | ssmtp -F "" $EMAIL_RECIPIENT_EMAIL
+    cat $mail_file | (cat - && uuencode $zip_log_file backuplog.zip) | ssmtp -F "" $EMAIL_TO
 
     rm -rf $log_dir
 fi

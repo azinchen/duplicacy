@@ -5,7 +5,6 @@ LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 ENV BACKUP_CRON="" \
     SNAPSHOT_ID="" \
     STORAGE_URL="" \
-    THREADS_NUM="1" \
     EMAIL_LOG_LINES_IN_BODY=10
 
 ADD https://github.com/just-containers/s6-overlay/releases/download/v1.22.1.0/s6-overlay-amd64.tar.gz /tmp/s6-overlay.tar.gz

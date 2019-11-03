@@ -13,7 +13,7 @@ ADD https://github.com/gilbertchen/duplicacy/releases/download/v2.2.3/duplicacy_
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress upgrade && \
     echo "**** install packages ****" && \
-    apk --no-cache --no-progress add bash tar zip ssmtp && \
+    apk --no-cache --no-progress add bash tar zip ca-certificates msmtp mutt && \
     echo "**** add s6 overlay ****" && \
     tar xfz /tmp/s6-overlay.tar.gz -C / && \
     echo "**** add duplicacy binary ****" && \

@@ -77,10 +77,6 @@ else
 fi
 
 if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
-    echo "To: $EMAIL_TO" >> $mail_file
-    echo "Subject: $subject" >> $mail_file
-    echo "" >> $mail_file
-
     if [[ `wc -l $log_file | awk '{ print $1 }'` -gt $((2*$EMAIL_LOG_LINES_IN_BODY)) ]]; then
         head -$EMAIL_LOG_LINES_IN_BODY $log_file >> $mail_file
         echo "..." >> $mail_file
@@ -96,7 +92,7 @@ if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
         echo $zipout
     fi
 
-    cat $mail_file | (cat - && uuencode $zip_log_file backuplog.zip) | ssmtp -F "" $EMAIL_TO
+    mutt -a $zip_log_file -s "$subject" -- $EMAIL_TO < $mail_file
 
     rm -rf $log_dir
 fi

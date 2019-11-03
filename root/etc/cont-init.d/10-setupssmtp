@@ -1,39 +1,54 @@
 #!/usr/bin/with-contenv bash
 
-ssmtp_conf_file=/etc/ssmtp/ssmtp.conf
-revaliases_file=/etc/ssmtp/revaliases
+msmtprc_file=/etc/msmtprc
+muttrc_file=/root/.muttrc
 
-rm -f $ssmtp_conf_file
-touch $ssmtp_conf_file
+rm -f $msmtprc_file
+touch $msmtprc_file
 
-rm -f $revaliases_file
-touch $revaliases_file
-
-echo FromLineOverride=YES >> $ssmtp_conf_file
-
-if [[ ! -z ${EMAIL_FROM} ]]; then
-    echo "root:$EMAIL_FROM" >> $revaliases_file
+echo "defaults" >> $msmtprc_file
+if [[ ! -z ${EMAIL_SMTP_LOGIN} ]] && [[ ! -z ${EMAIL_SMTP_PASSWORD} ]]; then
+    echo "auth on" >> $msmtprc_file
 fi
-
 if [[ ! -z ${EMAIL_USE_TLS} ]]; then
-    echo UseSTARTTLS=YES >> $ssmtp_conf_file
-    echo UseSSL=YES >> $ssmtp_conf_file
+    echo "tls on" >> $msmtprc_file
+    echo "tls_starttls on" >> $msmtprc_file
 fi
 
+echo "" >> $msmtprc_file
+echo "account main" >> $msmtprc_file
 if [[ ! -z ${EMAIL_SMTP_SERVER} ]]; then
-    if [[ ! -z ${EMAIL_SMTP_SERVER_PORT} ]]; then
-        echo "mailhub=$EMAIL_SMTP_SERVER:$EMAIL_SMTP_SERVER_PORT" >> $ssmtp_conf_file
-    else
-        echo "mailhub=$EMAIL_SMTP_SERVER" >> $ssmtp_conf_file
-    fi
+    echo "host $EMAIL_SMTP_SERVER" >> $msmtprc_file
 fi
-
+if [[ ! -z ${EMAIL_SMTP_SERVER_PORT} ]]; then
+    echo "port $EMAIL_SMTP_SERVER_PORT" >> $msmtprc_file
+fi
+if [[ ! -z ${EMAIL_FROM} ]]; then
+    echo "from $EMAIL_FROM" >> $msmtprc_file
+fi
 if [[ ! -z ${EMAIL_SMTP_LOGIN} ]]; then
-    echo "AuthUser=$EMAIL_SMTP_LOGIN" >> $ssmtp_conf_file
+    echo "user $EMAIL_SMTP_LOGIN" >> $msmtprc_file
+fi
+if [[ ! -z ${EMAIL_SMTP_PASSWORD} ]]; then
+    echo "password $EMAIL_SMTP_PASSWORD" >> $msmtprc_file
 fi
 
-if [[ ! -z ${EMAIL_SMTP_PASSWORD} ]]; then
-    echo "AuthPass=$EMAIL_SMTP_PASSWORD" >> $ssmtp_conf_file
+echo "" >> $msmtprc_file
+echo "account default : main" >> $msmtprc_file
+
+ln -sf /usr/bin/msmtp /usr/sbin/sendmail
+
+rm -f $muttrc_file
+touch $muttrc_file
+
+echo "set sendmail=/usr/bin/msmtp" >> $muttrc_file
+if [[ ! -z ${EMAIL_FROM_NAME} ]]; then
+    echo "set realname=\"$EMAIL_FROM_NAME\"" >> $muttrc_file
 fi
+if [[ ! -z ${EMAIL_FROM} ]]; then
+    echo "set use_from=yes" >> $muttrc_file
+    echo "set from=$EMAIL_FROM" >> $muttrc_file
+fi
+echo "set envelope_from=yes" >> $muttrc_file
 
 exit 0

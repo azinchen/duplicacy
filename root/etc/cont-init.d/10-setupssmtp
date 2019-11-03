@@ -42,9 +42,7 @@ rm -f $muttrc_file
 touch $muttrc_file
 
 echo "set sendmail=/usr/bin/msmtp" >> $muttrc_file
-if [[ ! -z ${EMAIL_FROM_NAME} ]]; then
-    echo "set realname=\"$EMAIL_FROM_NAME\"" >> $muttrc_file
-fi
+echo "set realname=\"$EMAIL_FROM_NAME\"" >> $muttrc_file
 if [[ ! -z ${EMAIL_FROM} ]]; then
     echo "set use_from=yes" >> $muttrc_file
     echo "set from=$EMAIL_FROM" >> $muttrc_file

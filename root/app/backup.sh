@@ -70,10 +70,10 @@ subject=""
 
 if [ $exitcode -eq 0 ]; then
     echo Backup COMPLETED, duration $(converts $duration) | tee -a $log_file
-    subject="duplicacy job COMPLETED, id $SNAPSHOT_ID url $STORAGE_URL"
+    subject="duplicacy job id \"$SNAPSHOT_ID\" COMPLETED"
 else
     echo Backup FAILED, code $exitcode, duration $(converts $duration) | tee -a $log_file
-    subject="duplicacy job FAILED, id $SNAPSHOT_ID url $STORAGE_URL"
+    subject="duplicacy job id \"$SNAPSHOT_ID\" FAILED"
 fi
 
 if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
@@ -84,6 +84,7 @@ if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
     echo "Content-Type: multipart/mixed; boundary=\"$boundary\"" >> $mail_file
     echo "Mime-Version: 1.0" >> $mail_file
     echo "" >> $mail_file
+
     echo "--${boundary}" >> $mail_file
 
     if [[ `wc -l $log_file | awk '{ print $1 }'` -gt $((2*$EMAIL_LOG_LINES_IN_BODY)) ]]; then
@@ -111,7 +112,7 @@ if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
     echo "" >> $mail_file
     echo "--${boundary}--" >> $mail_file
 
-    cat $mail_file | ssmtp -F "" $EMAIL_TO
+    cat $mail_file | ssmtp -F "$EMAIL_FROM_NAME" $EMAIL_TO
 
     rm -rf $log_dir
 fi

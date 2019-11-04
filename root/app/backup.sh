@@ -107,7 +107,7 @@ if [[ ! -z ${EMAIL_SMTP_SERVER} ]] && [[ ! -z ${EMAIL_TO} ]]; then
 
     echo "--${boundary}" >> $mail_file
     echo "Content-Transfer-Encoding: base64" >> $mail_file
-    echo "Content-Type: application/octet-stream; name=backuplog.zip" >> $mail_file
+    echo "Content-Type: application/zip; name=backuplog.zip" >> $mail_file
     echo "Content-Disposition: attachment; filename=backuplog.zip" >> $mail_file
     echo "" >> $mail_file
     base64 $zip_log_file >> $mail_file

@@ -23,7 +23,8 @@ RUN echo "**** upgrade packages ****" && \
     mkdir -p /data && \
     echo "**** cleanup ****" && \
     apk del --purge tar && \
-    rm -rf /tmp/*
+    rm -rf /tmp/* && \
+    rm -rf /var/cache/apk/*
 
 COPY root/ /
 

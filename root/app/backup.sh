@@ -43,7 +43,7 @@ config_dir=/config
 cd $config_dir
 
 echo "*** Backup ***" | tee -a $log_file
-duplicacy backup $BACKUP_OPTIONS | tee -a $log_file
+duplicacy $GLOBAL_OPTIONS backup $BACKUP_OPTIONS | tee -a $log_file
 exitcode=$?
 
 if [[ $exitcode -eq 0 ]] && [[ ! -z ${PRUNE_KEEP_POLICIES} ]]; then
@@ -55,12 +55,12 @@ if [[ $exitcode -eq 0 ]] && [[ ! -z ${PRUNE_KEEP_POLICIES} ]]; then
     done
 
     echo "*** Prune chunks by policies ***" | tee -a $log_file
-    sh -c "duplicacy prune $command" | tee -a $log_file
+    sh -c "duplicacy $GLOBAL_OPTIONS prune $command" | tee -a $log_file
     exitcode=$?
 
     if [[ $exitcode -eq 0 ]]; then
         echo "*** Delete marked chunks ***" | tee -a $log_file
-        duplicacy prune -exhaustive | tee -a $log_file
+        duplicacy $GLOBAL_OPTIONS prune -exhaustive | tee -a $log_file
         exitcode=$?
     fi
 fi

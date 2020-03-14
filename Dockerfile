@@ -8,7 +8,7 @@ ENV BACKUP_CRON="" \
     EMAIL_LOG_LINES_IN_BODY=10
 
 ADD https://github.com/just-containers/s6-overlay/releases/download/v1.22.1.0/s6-overlay-amd64.tar.gz /tmp/s6-overlay.tar.gz
-ADD https://github.com/gilbertchen/duplicacy/releases/download/v2.3.0/duplicacy_linux_x64_2.3.0 /usr/bin/duplicacy
+ADD https://github.com/gilbertchen/duplicacy/releases/download/v2.4.1/duplicacy_linux_arm64_2.4.1 /usr/bin/duplicacy
 
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress upgrade && \

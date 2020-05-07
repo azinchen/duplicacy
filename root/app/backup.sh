@@ -26,34 +26,15 @@ echo "*** Backup ***" | tee -a $log_file
 duplicacy $GLOBAL_OPTIONS backup $BACKUP_OPTIONS | tee -a $log_file
 exitcode=$?
 
-if [[ $exitcode -eq 0 ]] && [[ ! -z ${PRUNE_KEEP_POLICIES} ]]; then
-    IFS=';'
-    read -ra policies <<< $PRUNE_KEEP_POLICIES
-    command=""
-    for policy in ${policies[@]}; do
-        command="$command -keep $policy"
-    done
-
-    echo "*** Prune chunks by policies ***" | tee -a $log_file
-    sh -c "duplicacy $GLOBAL_OPTIONS prune $command" | tee -a $log_file
-    exitcode=$?
-
-    if [[ $exitcode -eq 0 ]]; then
-        echo "*** Delete marked chunks ***" | tee -a $log_file
-        duplicacy $GLOBAL_OPTIONS prune -exhaustive | tee -a $log_file
-        exitcode=$?
-    fi
-fi
-
 duration=$(echo "$(date +%s.%N) - $start" | bc)
 subject=""
 
 if [ $exitcode -eq 0 ]; then
     echo Backup COMPLETED, duration $(converts $duration) | tee -a $log_file
-    subject="duplicacy job id \"$hostname:$SNAPSHOT_ID\" COMPLETED"
+    subject="duplicacy backup job id \"$hostname:$SNAPSHOT_ID\" COMPLETED"
 else
     echo Backup FAILED, code $exitcode, duration $(converts $duration) | tee -a $log_file
-    subject="duplicacy job id \"$hostname:$SNAPSHOT_ID\" FAILED"
+    subject="duplicacy backup job id \"$hostname:$SNAPSHOT_ID\" FAILED"
 fi
 
 "$my_dir/mailto.sh" $log_dir "$subject"

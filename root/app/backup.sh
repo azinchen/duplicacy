@@ -15,11 +15,7 @@ fi
 
 echo ========== Run backup job at `date` ========== | tee $log_file
 
-if [[ ! -z ${BACKUP_RANDOM_DELAY} ]] && [[ $BACKUP_RANDOM_DELAY -ne 0 ]]; then
-    delay=$(((RANDOM % ($BACKUP_RANDOM_DELAY - 1)) + 1))
-    echo Delay backup for $(converts $delay) | tee -a $log_file
-    sleep $delay
-fi
+"$my_dir/delay.sh"
 
 start=$(date +%s.%N)
 config_dir=/config

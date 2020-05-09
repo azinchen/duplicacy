@@ -1,3 +1,16 @@
+FROM alpine:latest AS builder
+
+ADD https://github.com/just-containers/s6-overlay/releases/download/v1.22.1.0/s6-overlay-armhf.tar.gz /tmp/s6-overlay.tar.gz
+
+RUN echo "**** upgrade packages ****" && \
+    apk --no-cache --no-progress upgrade && \
+    echo "**** install packages ****" && \
+    apk --no-cache --no-progress add tar && \
+    echo "**** create folders ****" && \
+    mkdir -p /s6 && \
+    echo "**** extract s6 overlay ****" && \
+    tar xfz /tmp/s6-overlay.tar.gz -C /s6/
+
 FROM arm32v6/alpine:latest
 COPY qemu-arm-static /usr/bin/
 
@@ -8,25 +21,22 @@ ENV BACKUP_CRON="" \
     STORAGE_URL="" \
     EMAIL_LOG_LINES_IN_BODY=10
 
-ADD https://github.com/just-containers/s6-overlay/releases/download/v1.22.1.0/s6-overlay-armhf.tar.gz /tmp/s6-overlay.tar.gz
 ADD https://github.com/gilbertchen/duplicacy/releases/download/v2.5.1/duplicacy_linux_arm_2.5.1 /usr/bin/duplicacy
 
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress upgrade && \
     echo "**** install packages ****" && \
-    apk --no-cache --no-progress add bash tar zip ssmtp && \
-    echo "**** add s6 overlay ****" && \
-    tar xfz /tmp/s6-overlay.tar.gz -C / && \
+    apk --no-cache --no-progress add bash zip ssmtp && \
     echo "**** add duplicacy binary ****" && \
     chmod +x /usr/bin/duplicacy && \
     echo "**** create folders ****" && \
     mkdir -p /config && \
     mkdir -p /data && \
     echo "**** cleanup ****" && \
-    apk del --purge tar && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
 
+COPY --from=builder /s6/ /
 COPY root/ /
 
 RUN chmod +x /app/*

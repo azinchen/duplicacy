@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 my_dir="$(dirname "${BASH_SOURCE[0]}")"
 source "$my_dir/_env"

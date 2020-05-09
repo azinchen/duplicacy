@@ -15,7 +15,7 @@ fi
 
 echo ========== Run prune job at `date` ========== | tee $log_file
 
-"$my_dir/delay.sh"
+"$my_dir/delay.sh" $log_file
 
 start=$(date +%s.%N)
 config_dir=/config

@@ -29,7 +29,6 @@ for policy in ${policies[@]}; do
     command="$command -keep $policy"
 done
 
-echo "*** Prune ***" | tee -a $log_file
 sh -c "duplicacy $GLOBAL_OPTIONS prune $command" | tee -a $log_file
 exitcode=$?
 

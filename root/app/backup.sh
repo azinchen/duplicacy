@@ -22,7 +22,6 @@ config_dir=/config
 
 cd $config_dir
 
-echo "*** Backup ***" | tee -a $log_file
 duplicacy $GLOBAL_OPTIONS backup $BACKUP_OPTIONS | tee -a $log_file
 exitcode=$?
 

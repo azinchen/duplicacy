@@ -1,6 +1,6 @@
 FROM alpine:latest AS builder
 
-ADD https://github.com/just-containers/s6-overlay/releases/download/v1.22.1.0/s6-overlay-armhf.tar.gz /tmp/s6-overlay.tar.gz
+ADD __S6_OVERLAY__ /tmp/s6-overlay.tar.gz
 
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress upgrade && \
@@ -11,8 +11,8 @@ RUN echo "**** upgrade packages ****" && \
     echo "**** extract s6 overlay ****" && \
     tar xfz /tmp/s6-overlay.tar.gz -C /s6/
 
-FROM arm32v6/alpine:latest
-COPY qemu-arm-static /usr/bin/
+FROM __BASEIMAGE__
+__CROSS_COPY qemu-__QEMU_ARCH__-static /usr/bin/
 
 LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 
@@ -21,7 +21,7 @@ ENV BACKUP_CRON="" \
     STORAGE_URL="" \
     EMAIL_LOG_LINES_IN_BODY=10
 
-ADD https://github.com/gilbertchen/duplicacy/releases/download/v2.5.1/duplicacy_linux_arm_2.5.1 /usr/bin/duplicacy
+ADD __DUPLICACY__ /usr/bin/duplicacy
 
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress upgrade && \

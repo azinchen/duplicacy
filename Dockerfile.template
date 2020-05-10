@@ -12,7 +12,7 @@ RUN echo "**** upgrade packages ****" && \
     tar xfz /tmp/s6-overlay.tar.gz -C /s6/
 
 FROM __BASEIMAGE__
-__CROSS_COPY qemu-__QEMU_ARCH__-static /usr/bin/
+COPY qemu-__QEMU_ARCH__-static /usr/bin/
 
 LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 

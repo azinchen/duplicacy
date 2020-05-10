@@ -10,15 +10,14 @@ duplicacy_arch()
     elif [[ $target == "aarch64" ]]; then
         platform="arm64"
     fi
-    printf $platform
+    echo $platform
 }
 
 duplicacy_url()
 {
     local repo="gilbertchen/duplicacy"
-    local latest_tag=$(github_repo_latest_tag $repo)
-    local version="${latest_tag:1}"
-    printf "https://github.com/$repo/releases/download/$latest_tag/duplicacy_linux_$(duplicacy_arch $target)_$version"
+    local version="${$(github_repo_latest_tag $repo):1}"
+    echo $(github_repo_latest_url $repo)/duplicacy_linux_$(duplicacy_arch $target)_$version
 }
 
 my_dir="$(dirname "${BASH_SOURCE[0]}")"
@@ -29,11 +28,10 @@ docker run --rm --privileged multiarch/qemu-user-static:register --reset
 for target in ${targets[*]}; do
     target_file=Dockerfile.target-$target
     cp Dockerfile.template $target_file
-    sed -i -- "s/__QEMU_ARCH__/$(qemu_static_arch $target)/g" $target_file
     if [[ $target == "x86_64" ]]; then
-        sed -i -- "/__CROSS_/d" $target_file
+        sed -i -- "/__QEMU_ARCH__/d" $target_file
     else
-        sed -i -- "s/__CROSS_//g" $target_file
+        sed -i -- "s/__QEMU_ARCH__/$(qemu_static_arch $target)/g" $target_file
     fi
     sed -i -- "s%__S6_OVERLAY__%$(s6_overlay_url $target)%g" $target_file
     sed -i -- "s%__DUPLICACY__%$(duplicacy_url $target)%g" $target_file

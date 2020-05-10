@@ -2,7 +2,7 @@
 
 exitcode=0
 
-if [[ $BACKUP_IMMEDIATELY == "yes" ]] || [[ $BACKUP_IMMEDIATELY == "YES" ]]; then
+if [[ $RUN_JOB_IMMEDIATELY == "yes" ]] || [[ $BRUN_JOB_IMMEDIATELY == "YES" ]]; then
     /app/backup.sh
     exitcode=$?
 fi

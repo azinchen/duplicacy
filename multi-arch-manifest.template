@@ -4,7 +4,7 @@ manifests:
     platform:
       architecture: amd64
       os: linux
-  - image: __IMAGE_NAME__armhf
+  - image: __IMAGE_NAME__-armhf
     platform:
       architecture: arm
       os: linux

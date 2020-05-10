@@ -16,7 +16,8 @@ duplicacy_arch()
 duplicacy_url()
 {
     local repo=gilbertchen/duplicacy
-    local version="${$(github_repo_latest_tag $repo):1}"
+    local latest_tag=$(github_repo_latest_tag $repo)
+    local version="${latest_tag:1}"
     echo $(github_repo_latest_url $repo)/duplicacy_linux_$(duplicacy_arch $target)_$version
 }
 

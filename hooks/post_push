@@ -13,4 +13,8 @@ chmod +x manifest-tool
 cp multi-arch-manifest.template multi-arch-manifest.yaml
 sed -i -- "s%__IMAGE_NAME__%$DOCKER_REPO:$DOCKER_TAG%g" multi-arch-manifest.yaml
 
+echo ********** Check manifest tool **********
+ls -la
+echo **********                     **********
+
 ./manifest-tool push from-spec multi-arch-manifest.yaml

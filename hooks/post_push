@@ -3,21 +3,14 @@
 my_dir="$(dirname "${BASH_SOURCE[0]}")"
 source "$my_dir/_env"
 
-manifest_create_images=""
+manifest_tool_repo=estesp/manifest-tool
+latest_tag=$(github_repo_latest_tag manifest_tool_repo)
+url="https://github.com/$manifest_tool_repo/releases/download/$latest_tag/manifest-tool-linux-amd64"
 
-for target in ${targets[*]}; do
-    if [[ ! -z ${manifest_create_images} ]]; then
-        manifest_create_images="$manifest_create_images "
-    fi
-    manifest_create_images="$manifest_create_images$DOCKER_REPO:$DOCKER_TAG-$target"
-done
+cp multi-arch-manifest.template multi-arch-manifest.yaml
+sed -i -- "s%__IMAGE_NAME__%$DOCKER_REPO:$DOCKER_TAG%g" multi-arch-manifest.yaml
 
-docker manifest create $DOCKER_REPO:$DOCKER_TAG $manifest_create_images
+curl -Lo manifest-tool $url
+chmod +x manifest-tool
 
-for target in ${targets[*]}; do
-    if [[ ! ($target == "x86_64") ]]; then
-        docker manifest annotate $DOCKER_REPO:$DOCKER_TAG $(manifest_annotate_flags $target)
-    fi
-done
-
-docker manifest push $DOCKER_REPO:$DOCKER_TAG
+./manifest-tool push from-spec multi-arch-manifest.yaml

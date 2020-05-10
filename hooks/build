@@ -5,5 +5,5 @@ source "$my_dir/_env"
 
 for target in ${targets[*]}; do
     target_file=Dockerfile.target-$target
-    docker build -f $target_file -t $DOCKER_REPO:$target-$DOCKER_TAG .
+    docker build -f $target_file -t $DOCKER_REPO:$DOCKER_TAG-$target .
 done

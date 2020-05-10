@@ -1,0 +1,23 @@
+#!/bin/bash
+
+my_dir="$(dirname "${BASH_SOURCE[0]}")"
+source "$my_dir/_env"
+
+manifest_create_images=""
+
+for target in ${targets[*]}; do
+    if [[ ! -z ${manifest_create_images} ]]; then
+        manifest_create_images="$manifest_create_images "
+    fi
+    manifest_create_images="$manifest_create_images$DOCKER_REPO:$DOCKER_TAG-$target"
+done
+
+docker manifest create $DOCKER_REPO:$DOCKER_TAG $manifest_create_images
+
+for target in ${targets[*]}; do
+    if [[ ! ($target == "x86_64") ]]; then
+        docker manifest annotate $DOCKER_REPO:$DOCKER_TAG $(manifest_annotate_flags $target)
+    fi
+done
+
+docker manifest push $DOCKER_REPO:$DOCKER_TAG

@@ -59,7 +59,7 @@ manifest_annotate_flags()
     local target=$1
     if [[ $target == "armhf" ]]; then
         echo "--os linux --arch arm"
-    if [[ $target == "aarch64" ]]; then
+    elif [[ $target == "aarch64" ]]; then
         echo "--os linux --arch arm64 --variant armv8"
     fi
 }

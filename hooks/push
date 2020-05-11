@@ -4,5 +4,5 @@ my_dir="$(dirname "${BASH_SOURCE[0]}")"
 source "$my_dir/_env"
 
 for target in ${targets[*]}; do
-    docker push $(image_name $target)
+    docker push $DOCKER_REPO:$DOCKER_TAG-$target
 done

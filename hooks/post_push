@@ -3,9 +3,7 @@
 my_dir="$(dirname "${BASH_SOURCE[0]}")"
 source "$my_dir/_env"
 
-manifest_tool_repo=estesp/manifest-tool
-
-curl -Lo manifest-tool $(github_repo_latest_url $manifest_tool_repo)/manifest-tool-linux-amd64
+curl -Lo manifest-tool https://github.com/estesp/manifest-tool/releases/latest/download/manifest-tool-linux-amd64
 chmod +x manifest-tool
 
 cp multi-arch-manifest.template multi-arch-manifest.yaml

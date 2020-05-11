@@ -1,5 +1,11 @@
 #!/bin/bash
 
+github_repo_latest_tag()
+{
+    local repo=$1
+    echo $(curl -Ls https://api.github.com/repos/$repo/tags | awk -F'"' '/name.*v[0-9]/ {print $4; exit}')
+}
+
 duplicacy_arch()
 {
     local target=$1
@@ -18,11 +24,54 @@ duplicacy_url()
     local repo=gilbertchen/duplicacy
     local latest_tag=$(github_repo_latest_tag $repo)
     local version="${latest_tag:1}"
-    echo $(github_repo_latest_url $repo)/duplicacy_linux_$(duplicacy_arch $target)_$version
+    echo https://github.com/gilbertchen/duplicacy/releases/latest/download/duplicacy_linux_$(duplicacy_arch $target)_$version
+}
+
+qemu_static_arch()
+{
+    local target=$1
+    if [[ $target == "armhf" ]]; then
+        echo arm
+    else
+        echo $target
+    fi
+}
+
+s6_overlay_arch()
+{
+    local target=$1
+    if [[ $target == "x86_64" ]]; then
+        echo amd64
+    else
+        echo $target
+    fi
+}
+
+s6_overlay_url()
+{
+    local target=$1
+    echo https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-$(s6_overlay_arch $target).tar.gz
+}
+
+alpine_base_image()
+{
+    local target=$1
+    for index in ${!targets[*]}; do
+        if [[ $target == ${targets[$index]} ]]; then
+            echo ${alpine_base_images[$index]}
+            return 0
+        fi
+    done
 }
 
 my_dir="$(dirname "${BASH_SOURCE[0]}")"
 source "$my_dir/_env"
+
+for target in ${targets[*]}; do
+    if [[ ! ($target == "x86_64") ]]; then
+        curl -Ls https://github.com/multiarch/qemu-user-static/releases/latest/download/x86_64_qemu-$(qemu_static_arch $target)-static.tar.gz | tar xzv
+    fi
+done
 
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
 

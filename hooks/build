@@ -4,6 +4,5 @@ my_dir="$(dirname "${BASH_SOURCE[0]}")"
 source "$my_dir/_env"
 
 for target in ${targets[*]}; do
-    target_file=Dockerfile.target-$target
-    docker build -f $target_file -t $(image_name $target) .
+    docker build -f Dockerfile.target-$target -t $DOCKER_REPO:$DOCKER_TAG-$target .
 done

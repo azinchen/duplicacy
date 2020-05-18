@@ -26,7 +26,7 @@ ADD __DUPLICACY__ /usr/bin/duplicacy
 RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress upgrade && \
     echo "**** install packages ****" && \
-    apk --no-cache --no-progress add bash zip ssmtp && \
+    apk --no-cache --no-progress add bash zip ssmtp ca-certificates && \
     echo "**** add duplicacy binary ****" && \
     chmod +x /usr/bin/duplicacy && \
     echo "**** create folders ****" && \

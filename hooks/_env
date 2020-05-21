@@ -1,2 +1,2 @@
 targets=(x86_64 armhf aarch64)
-alpine_base_images=(alpine:latest arm32v6/alpine:latest arm64v8/alpine:latest)
+alpine_base_images=(alpine arm32v6/alpine arm64v8/alpine)

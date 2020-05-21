@@ -10,11 +10,11 @@ duplicacy_arch()
 {
     local target=$1
     if [[ $target == "x86_64" ]]; then
-        platform="x64"
+        platform=x64
     elif [[ $target == "armhf" ]]; then
-        platform="arm"
+        platform=arm
     elif [[ $target == "aarch64" ]]; then
-        platform="arm64"
+        platform=arm64
     fi
     echo $platform
 }
@@ -56,9 +56,13 @@ s6_overlay_url()
 alpine_base_image()
 {
     local target=$1
+    local alpine_tag="latest"
+    if [[ $DOCKER_TAG == "edge" ]]; then
+        alpine_tag="edge"
+    fi
     for index in ${!targets[*]}; do
         if [[ $target == ${targets[$index]} ]]; then
-            echo ${alpine_base_images[$index]}
+            echo ${alpine_base_images[$index]}:$alpine_tag
             return 0
         fi
     done

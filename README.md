@@ -70,7 +70,7 @@ Container images are configured using environment variables passed at runtime.
 
 ## Disclaimer
 
-This project uses [Duplicacy][duplicacy-home], which is free for personal use but requires [purchasing a licence][duplicacy-purchase] for non-trial commercial use. See the detailed terms [here]([duplicacy-license].
+This project uses [Duplicacy][duplicacy-home], which is free for personal use but requires [purchasing a licence][duplicacy-purchase] for non-trial commercial use. See the detailed terms [here][duplicacy-license].
 
 # Issues
 

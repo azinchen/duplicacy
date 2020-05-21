@@ -84,7 +84,7 @@ If you have any problems with or questions about this image, please contact me t
 [github-link]: https://github.com/azinchen/duplicacy
 [github-issues]: https://github.com/azinchen/duplicacy/issues
 [duplicacy-home]: https://duplicacy.com
-[duplicacy-license]: https://github.com/gilbertchen/duplicacy/blob/master/LICENSE.md)
+[duplicacy-license]: https://github.com/gilbertchen/duplicacy/blob/master/LICENSE.md
 [duplicacy-purchase]: https://duplicacy.com/buy.html
 [duplicacy-forum]: https://forum.duplicacy.com
 [duplicacy-storage]: https://forum.duplicacy.com/t/supported-storage-backends/1107

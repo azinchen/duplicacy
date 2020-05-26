@@ -19,8 +19,8 @@ converts()
 
 hostname=""
 
-if [[ ! -z ${HOSTNAME} ]]; then
-    hostname=$HOSTNAME
+if [[ ! -z ${HOSTNAME_ALIAS} ]]; then
+    hostname=$HOSTNAME_ALIAS
 else
     hostname=`hostname`
 fi

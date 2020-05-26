@@ -1,4 +1,4 @@
-# duplicacy
+# Duplicacy
 
 [![Docker Pulls][dockerhub-pulls]][dockerhub-link]
 [![Docker Build][dockerhub-build]][dockerhub-link]
@@ -43,30 +43,28 @@ docker run \
 
 Container images are configured using environment variables passed at runtime.
 
- * `BACKUP_CRON`
- * `PRUNE_CRON`
- * `CHUNK_SIZE`
- * `MAX_CHUNK_SIZE`
- * `MIN_CHUNK_SIZE`
- * `GLOBAL_OPTIONS`
- * `BACKUP_OPTIONS`
- * `PRUNE_OPTIONS`
- * `RUN_JOB_IMMEDIATELY`
- * `SNAPSHOT_ID`
- * `STORAGE_URL`
- * `JOB_RANDOM_DELAY`
- * `PRUNE_KEEP_POLICIES`
- * `FILTER_PATTERNS`
- * `DUPLICACY_PASSWORD`
- * `EMAIL_FROM`
- * `EMAIL_FROM_NAME`
- * `EMAIL_TO`
- * `EMAIL_USE_TLS`
- * `EMAIL_SMTP_SERVER`
- * `EMAIL_SMTP_SERVER_PORT`
- * `EMAIL_SMTP_LOGIN`
- * `EMAIL_SMTP_PASSWORD`
- * `EMAIL_LOG_LINES_IN_BODY`
+ * `BACKUP_CRON`             - Set schedule for `duplicacy backup` command in format for crontab file. The `duplicacy backup` command doesn't start if `BACKUP_CRON` is not set.
+ * `PRUNE_CRON`              - Set schedule for `duplicacy prune` command in format for crontab file. The `duplicacy prune` command doesn't start if `PRUNE_CRON` is not set.
+ * `GLOBAL_OPTIONS`          - Set global options for every `duplicacy` command. See [documentation][duplicacy-global-options] for details. Global options are not set by default.
+ * `BACKUP_OPTIONS`          - Set options for every `duplicacy backup` command. See `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default.
+ * `PRUNE_OPTIONS`           - Set options for every `duplicacy prune` command. See `duplicacy prune` command [description][duplicacy-prune] for details. Prune options are not set by default.
+ * `RUN_JOB_IMMEDIATELY`     - Set to `yes` to run `duplicacy backup` and/or `duplicacy prune` command at container startup. Immeditely jobs are not start by default.
+ * `SNAPSHOT_ID`             - Set snapshot id, see `duplicacy init` command [description][duplicacy-init] for details.
+ * `STORAGE_URL`             - Set storage url, see `duplicacy init` command [description][duplicacy-init] for details. Duplicacy supports different storage providers, see ["Supported storage backends"][duplicacy-storage] for details. Login credentials for storage url should be set using environment variables, see ["Passwords, credentials and environment variables"][duplicacy-variables] for details.
+ * `JOB_RANDOM_DELAY`        - Set maximum value of job delay before startup in seconds. Jobs run without delay by default.
+ * `PRUNE_KEEP_POLICIES`     - Set keep options for `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Several keep options can be set using semicolon as delimeter.
+ * `FILTER_PATTERNS`         - Set filter patterns, see ["Filters/Include exclude patterns"][duplicacy-filters] for details. Several filter patterns can be defined using semicolon as delimeter.
+ * `DUPLICACY_PASSWORD`      - Enable encryption for storage and set password, see `duplicacy init` command [description][duplicacy-init] for details. Encryption is disabled by default.
+ * `EMAIL_HOSTNAME_ALIAS`    - Set host alias in email reports. Container's hostname is used by default.
+ * `EMAIL_FROM`              - Set sender email.
+ * `EMAIL_FROM_NAME`         - Set sender name.
+ * `EMAIL_TO`                - Set recipient email.
+ * `EMAIL_USE_TLS`           - Enable encryption in session with SMTP server.
+ * `EMAIL_SMTP_SERVER`       - Set SMTP server address.
+ * `EMAIL_SMTP_SERVER_PORT`  - Set SMTP server port.
+ * `EMAIL_SMTP_LOGIN`        - Set SMTP server login.
+ * `EMAIL_SMTP_PASSWORD`     - Set SMTP server password.
+ * `EMAIL_LOG_LINES_IN_BODY` - Set number of lines from the beginning and the end of log and put it to the body of email report. Default value is `10`.
 
 ## Disclaimer
 

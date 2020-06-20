@@ -23,7 +23,7 @@ config_dir=/config
 cd $config_dir
 
 duplicacy $GLOBAL_OPTIONS backup $BACKUP_OPTIONS | tee -a $log_file
-exitcode=$?
+exitcode=${PIPESTATUS[0]}
 
 duration=$(echo "$(date +%s.%N) - $start" | bc)
 subject=""

@@ -1,6 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 if [[ ! $PRIORITY_LEVEL =~ ^[+-]?[0-9]+$ ]] || [[ $PRIORITY_LEVEL -le 21 ]] || [[ ! $PRIORITY_LEVEL -ge 20 ]]; then
+    echo Priority level is not set or out of range. Set priority to 10.
     export PRIORITY_LEVEL=10
 fi
 

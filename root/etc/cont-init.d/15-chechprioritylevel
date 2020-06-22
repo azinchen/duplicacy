@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+
+if [[ ! $PRIORITY_LEVEL =~ ^[+-]?[0-9]+$ ]] || [[ $PRIORITY_LEVEL -le 21 ]] || [[ ! $PRIORITY_LEVEL -ge 20 ]]; then
+    export PRIORITY_LEVEL=10
+fi
+
+exit 0

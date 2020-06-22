@@ -47,6 +47,7 @@ Container images are configured using environment variables passed at runtime.
  * `PRUNE_CRON`              - Set schedule for `duplicacy prune` command in format for crontab file. The `duplicacy prune` command doesn't run if `PRUNE_CRON` is not set.
  * `GLOBAL_OPTIONS`          - Set global options for every `duplicacy` command, see ["Global options details"][duplicacy-global-options] for details. Global options are not set by default.
  * `BACKUP_OPTIONS`          - Set options for every `duplicacy backup` command, see `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default.
+ * `POST_BACKUP_SCRIPT'      - Give path of a custom script to run once backup completes
  * `PRUNE_OPTIONS`           - Set options for every `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Prune options are not set by default.
  * `RUN_JOB_IMMEDIATELY`     - Set to `yes` to run `duplicacy backup` and/or `duplicacy prune` command at container startup. Immeditely jobs don't start by default.
  * `SNAPSHOT_ID`             - Set snapshot id, see `duplicacy init` command [description][duplicacy-init] for details.

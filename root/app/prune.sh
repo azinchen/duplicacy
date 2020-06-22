@@ -43,6 +43,15 @@ else
     subject="duplicacy prune job id \"$hostname:$SNAPSHOT_ID\" FAILED"
 fi
 
+if [ -n $POST_PRUNE_SCRIPT ] ; then
+    if [ -e $POST_PRUNE_SCRIPT ] ; then
+        export log_file exitcode duration my_dir # Variables I require in my post prune script
+        sh -c ${POST_PRUNE_SCRIPT}
+    else
+        echo POST_PRUNE_SCRIPT not found
+    fi
+fi
+
 "$my_dir/mailto.sh" $log_dir "$subject"
 
 exit $exitcode

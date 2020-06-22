@@ -30,7 +30,7 @@ for policy in ${policies[@]}; do
 done
 
 sh -c "duplicacy $GLOBAL_OPTIONS prune $command" | tee -a $log_file
-exitcode=$?
+exitcode=${PIPESTATUS[0]}
 
 duration=$(echo "$(date +%s.%N) - $start" | bc)
 subject=""

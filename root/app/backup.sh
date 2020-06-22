@@ -37,12 +37,12 @@ else
 fi
 
 if [ -n $POST_BACKUP_SCRIPT ] ; then
-	if [ -e $POST_BACKUP_SCRIPT ] ; then
-		export log_file exitcode duration my_dir # Variables I require in my post backup script
-		sh -c ${POST_BACKUP_SCRIPT}
-	else
-		echo POST_BACKUP_SCRIPT not found
-	fi
+    if [ -e $POST_BACKUP_SCRIPT ] ; then
+        export log_file exitcode duration my_dir # Variables I require in my post backup script
+        sh -c ${POST_BACKUP_SCRIPT}
+    else
+    echo POST_BACKUP_SCRIPT not found
+    fi
 fi
 
 "$my_dir/mailto.sh" $log_dir "$subject"

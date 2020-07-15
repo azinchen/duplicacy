@@ -43,7 +43,7 @@ else
     subject="duplicacy prune job id \"$hostname:$SNAPSHOT_ID\" FAILED"
 fi
 
-if [[ ! -z ${POST_PRUNE_SCRIPT} ]]  then
+if [[ ! -z ${POST_PRUNE_SCRIPT} ]];  then
     if [[ -f ${POST_PRUNE_SCRIPT} ]]; then
         echo Run post prune script | tee -a $log_file
         export log_file exitcode duration my_dir # Variables I require in my post prune script

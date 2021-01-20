@@ -56,13 +56,9 @@ s6_overlay_url()
 alpine_base_image()
 {
     local target=$1
-    local alpine_tag="latest"
-    if [[ $DOCKER_TAG == "edge" ]]; then
-        alpine_tag="edge"
-    fi
     for index in ${!targets[*]}; do
         if [[ $target == ${targets[$index]} ]]; then
-            echo ${alpine_base_images[$index]}:$alpine_tag
+            echo ${alpine_base_images[$index]}
             return 0
         fi
     done

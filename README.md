@@ -45,6 +45,7 @@ Container images are configured using environment variables passed at runtime.
 
  * `BACKUP_CRON`             - Set schedule for `duplicacy backup` command in format for crontab file. The `duplicacy backup` command doesn't run if `BACKUP_CRON` is not set.
  * `PRUNE_CRON`              - Set schedule for `duplicacy prune` command in format for crontab file. The `duplicacy prune` command doesn't run if `PRUNE_CRON` is not set.
+ * `BACKUP_END_CRON`         - Set schedule for force killing of duplicacy backup process in format for crontab file. The force killing of duplicacy backup process doesn't run if `BACKUP_END_CRON` is not set.
  * `PRIORITY_LEVEL`          - Run `duplicacy` with an adjusted niceness, which affects process scheduling. Niceness values range from -20 (most favorable to the process) to 19 (least favorable to the process). Default value is 10.
  * `GLOBAL_OPTIONS`          - Set global options for every `duplicacy` command, see ["Global options details"][duplicacy-global-options] for details. Global options are not set by default.
  * `BACKUP_OPTIONS`          - Set options for every `duplicacy backup` command, see `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default.

@@ -14,4 +14,8 @@ if [[ "${PRUNE_CRON}" ]]; then
     echo "$PRUNE_CRON /app/prune.sh" >> $cron_file
 fi
 
+if [[ "${BACKUP_END_CRON}" ]]; then
+    echo "$BACKUP_END_CRON /app/end_backup.sh" >> $cron_file
+fi
+
 exit 0

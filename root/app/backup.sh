@@ -28,6 +28,9 @@ if [[ ! -z ${PRE_BACKUP_SCRIPT} ]]; then
         # Command not found exit code (https://tldp.org/LDP/abs/html/exitcodes.html)
         exitcode=127
     fi
+else
+    # No pre backup script so call it a success
+    exitcode=0
 fi
 
 if [ $exitcode -eq 0 ]; then

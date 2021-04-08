@@ -49,6 +49,7 @@ Container images are configured using environment variables passed at runtime.
  * `PRIORITY_LEVEL`          - Run `duplicacy` with an adjusted niceness, which affects process scheduling. Niceness values range from -20 (most favorable to the process) to 19 (least favorable to the process). Default value is 10.
  * `GLOBAL_OPTIONS`          - Set global options for every `duplicacy` command, see ["Global options details"][duplicacy-global-options] for details. Global options are not set by default.
  * `BACKUP_OPTIONS`          - Set options for every `duplicacy backup` command, see `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default.
+ * `PRE_BACKUP_SCRIPT`       - Give path of a custom script to run just before a backup starts.
  * `POST_BACKUP_SCRIPT`      - Give path of a custom script to run once backup completes.
  * `PRUNE_OPTIONS`           - Set options for every `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Prune options are not set by default.
  * `POST_PRUNE_SCRIPT`       - Give path of a custom script to run once prune completes.

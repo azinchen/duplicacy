@@ -17,6 +17,16 @@ echo ========== Run backup job at `date` ========== | tee $log_file
 
 "$my_dir/delay.sh" $log_file
 
+if [[ ! -z ${PRE_BACKUP_SCRIPT} ]]; then
+    if [[ -f ${PRE_BACKUP_SCRIPT} ]]; then
+        echo Run pre backup script | tee -a $log_file
+        export log_file my_dir # Variables I require in my pre backup script
+        sh -c "${PRE_BACKUP_SCRIPT}"
+    else
+        echo Pre backup script defined, but file not found | tee -a $log_file
+    fi
+fi
+
 start=$(date +%s.%N)
 config_dir=/config
 

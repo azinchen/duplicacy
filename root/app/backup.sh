@@ -22,7 +22,7 @@ if [[ ! -z ${PRE_BACKUP_SCRIPT} ]]; then
         echo Run pre backup script | tee -a $log_file
         export log_file my_dir # Variables I require in my pre backup script
         sh -c "${PRE_BACKUP_SCRIPT}"
-        exitcode = ${PIPESTATUS[0]
+        exitcode = ${PIPESTATUS[0]}
     else
         echo Pre backup script defined, but file not found | tee -a $log_file
         # Command not found exit code (https://tldp.org/LDP/abs/html/exitcodes.html)

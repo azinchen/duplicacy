@@ -21,7 +21,7 @@ if [[ ! -z ${PRE_BACKUP_SCRIPT} ]]; then
     if [[ -f ${PRE_BACKUP_SCRIPT} ]]; then
         echo Run pre backup script | tee -a $log_file
         export log_file my_dir # Variables I require in my pre backup script
-        sh -c "${PRE_BACKUP_SCRIPT}"
+        sh -c "${PRE_BACKUP_SCRIPT}" | tee -a $log_file
         exitcode=${PIPESTATUS[0]}
     else
         echo Pre backup script defined, but file not found | tee -a $log_file
@@ -57,7 +57,7 @@ if [ $exitcode -eq 0 ]; then
         if [[ -f ${POST_BACKUP_SCRIPT} ]]; then
             echo Run post backup script | tee -a $log_file
             export log_file exitcode duration my_dir # Variables I require in my post backup script
-            sh -c "${POST_BACKUP_SCRIPT}"
+            sh -c "${POST_BACKUP_SCRIPT}" | tee -a $log_file
         else
             echo Post backup script defined, but file not found | tee -a $log_file
         fi

@@ -47,7 +47,7 @@ if [[ ! -z ${POST_PRUNE_SCRIPT} ]];  then
     if [[ -f ${POST_PRUNE_SCRIPT} ]]; then
         echo Run post prune script | tee -a $log_file
         export log_file exitcode duration my_dir # Variables I require in my post prune script
-        sh -c "${POST_PRUNE_SCRIPT}"
+        sh -c "${POST_PRUNE_SCRIPT}" | tee -a $log_file
     else
         echo Post prune script defined, but file not found | tee -a $log_file
     fi

@@ -50,9 +50,9 @@ Container images are configured using environment variables passed at runtime.
  * `GLOBAL_OPTIONS`          - Set global options for every `duplicacy` command, see ["Global options details"][duplicacy-global-options] for details. Global options are not set by default.
  * `BACKUP_OPTIONS`          - Set options for every `duplicacy backup` command, see `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default.
  * `PRE_BACKUP_SCRIPT`       - Give path of a custom script to run just before a backup starts. You could use docker command in pre script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
- * `POST_BACKUP_SCRIPT`      - Give path of a custom script to run once backup completes. You could use docker command in pre script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
+ * `POST_BACKUP_SCRIPT`      - Give path of a custom script to run once backup completes. You could use docker command in post script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
  * `PRUNE_OPTIONS`           - Set options for every `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Prune options are not set by default.
- * `POST_PRUNE_SCRIPT`       - Give path of a custom script to run once prune completes.
+ * `POST_PRUNE_SCRIPT`       - Give path of a custom script to run once prune completes. You could use docker command in post script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
  * `RUN_JOB_IMMEDIATELY`     - Set to `yes` to run `duplicacy backup` and/or `duplicacy prune` command at container startup. Immeditely jobs don't start by default.
  * `SNAPSHOT_ID`             - Set snapshot id, see `duplicacy init` command [description][duplicacy-init] for details.
  * `STORAGE_URL`             - Set storage url, see `duplicacy init` command [description][duplicacy-init] for details. Duplicacy supports different storage providers, see ["Supported storage backends"][duplicacy-storage] for details. Login credentials for storage url should be set using environment variables, see ["Passwords, credentials and environment variables"][duplicacy-variables] for details.

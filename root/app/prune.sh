@@ -15,35 +15,43 @@ fi
 
 echo ========== Run prune job at `date` ========== | tee $log_file
 
-"$my_dir/delay.sh" $log_file
+if operation_in_progress prune; then
+    duration=0
+    exitcode=127
+else
+    # Use the scripts pid as the pid for simplicity
+    create_prune_pid_file ${$}
+    trap remove_prune_pid_file EXIT
 
-start=$(date +%s.%N)
-config_dir=/config
+    "$my_dir/delay.sh" $log_file
 
-cd $config_dir
+    start=$(date +%s.%N)
+    config_dir=/config
 
-IFS=';'
-read -ra policies <<< $PRUNE_KEEP_POLICIES
-command="$PRUNE_OPTIONS"
-for policy in ${policies[@]}; do
-    command="$command -keep $policy"
-done
+    cd $config_dir
 
-sh -c "nice -n $PRIORITY_LEVEL duplicacy $GLOBAL_OPTIONS prune $command" | tee -a $log_file
-exitcode=${PIPESTATUS[0]}
+    IFS=';'
+    read -ra policies <<< $PRUNE_KEEP_POLICIES
+    command="$PRUNE_OPTIONS"
+    for policy in ${policies[@]}; do
+        command="$command -keep $policy"
+    done
 
-if [[ ! -z ${POST_PRUNE_SCRIPT} ]];  then
-    if [[ -f ${POST_PRUNE_SCRIPT} ]]; then
-        echo Run post prune script | tee -a $log_file
-        export log_file exitcode duration my_dir # Variables I require in my post prune script
-        sh -c "${POST_PRUNE_SCRIPT}" | tee -a $log_file
-    else
-        echo Post prune script defined, but file not found | tee -a $log_file
+    sh -c "nice -n $PRIORITY_LEVEL duplicacy $GLOBAL_OPTIONS prune $command" | tee -a $log_file
+    exitcode=${PIPESTATUS[0]}
+
+    if [[ ! -z ${POST_PRUNE_SCRIPT} ]];  then
+        if [[ -f ${POST_PRUNE_SCRIPT} ]]; then
+            echo Run post prune script | tee -a $log_file
+            export log_file exitcode duration my_dir # Variables I require in my post prune script
+            sh -c "${POST_PRUNE_SCRIPT}" | tee -a $log_file
+        else
+            echo Post prune script defined, but file not found | tee -a $log_file
+        fi
     fi
-fi
 
-duration=$(echo "$(date +%s.%N) - $start" | bc)
-subject=""
+    duration=$(echo "$(date +%s.%N) - $start" | bc)
+fi
 
 if [ $exitcode -eq 0 ]; then
     echo Prune COMPLETED, duration $(converts $duration) | tee -a $log_file

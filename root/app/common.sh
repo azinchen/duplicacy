@@ -24,3 +24,53 @@ if [[ ! -z ${EMAIL_HOSTNAME_ALIAS} ]]; then
 else
     hostname=`hostname`
 fi
+
+backup_pid_file=/var/run/duplicacy_backup.pid
+prune_pid_file=/var/run/duplicacy_prune.pid
+
+operation_in_progress()
+{
+  # Expect the name of the operation as the first parameter
+  operation=${1}
+
+  if [ -f ${backup_pid_file} ]; then
+    echo A backup is in progress with PID=$(cat ${backup_pid_file}). Skipping ${operation}. | tee $log_file
+    return 0
+  fi
+
+  if [ -f ${prune_pid_file} ]; then
+    echo A prune is in progress with PID=$(cat ${prune_pid_file}). Skipping ${operation}. | tee $log_file
+    return 0
+  fi
+
+  # No operation in progress
+  return 127
+}
+
+create_backup_pid_file()
+{
+  # Expect PID as the first parmater
+  pid=${1}
+  echo Creating backup pid file, ${backup_pid_file}, with pid=${pid}. | tee $log_file
+  echo ${pid} > "${backup_pid_file}"
+}
+
+create_prune_pid_file()
+{
+  # Expect PID as the first parmater
+  pid=${1}
+  echo Creating prune pid file, ${prune_pid_file}, with pid=$pid}. | tee $log_file
+  echo ${pid} > "${prune_pid_file}"
+}
+
+remove_backup_pid_file()
+{
+  echo Removing backup pid file, ${backup_pid_file}. | tee $log_file
+  rm "${backup_pid_file}"
+}
+
+remove_prune_pid_file()
+{
+  echo Removing prune pid file, ${prune_pid_file}. | tee $log_file
+  rm "${prune_pid_file}"
+}

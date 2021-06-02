@@ -21,7 +21,7 @@ if operation_in_progress prune; then
 else
     # Use the scripts pid as the pid for simplicity
     create_prune_pid_file ${$}
-    trap remove_prune_pid_file EXIT
+    trap remove_prune_pid_file INT TERM EXIT
 
     "$my_dir/delay.sh" $log_file
 

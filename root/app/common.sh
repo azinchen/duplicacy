@@ -36,12 +36,12 @@ operation_in_progress()
     operation=${1}
 
     if [ -f ${backup_pid_file} ]; then
-        echo A backup is in progress with PID=$(cat ${backup_pid_file}). Skipping ${operation}. | tee -a $log_file
+        echo A backup is in progress with PID=$(cat ${backup_pid_file}). Skipping ${operation} | tee -a $log_file
         return 0
     fi
 
     if [ -f ${prune_pid_file} ]; then
-        echo A prune is in progress with PID=$(cat ${prune_pid_file}). Skipping ${operation}. | tee -a $log_file
+        echo A prune is in progress with PID=$(cat ${prune_pid_file}). Skipping ${operation} | tee -a $log_file
         return 0
     fi
 
@@ -53,7 +53,7 @@ create_backup_pid_file()
 {
     # Expect PID as the first parmater
     pid=${1}
-    echo Creating backup pid file, ${backup_pid_file}, with pid=${pid}. | tee -a $log_file
+    echo Creating backup pid file, ${backup_pid_file}, with pid=${pid} | tee -a $log_file
     echo ${pid} > "${backup_pid_file}"
 }
 
@@ -61,18 +61,18 @@ create_prune_pid_file()
 {
     # Expect PID as the first parmater
     pid=${1}
-    echo Creating prune pid file, ${prune_pid_file}, with pid=${pid}. | tee -a $log_file
+    echo Creating prune pid file, ${prune_pid_file}, with pid=${pid} | tee -a $log_file
     echo ${pid} > "${prune_pid_file}"
 }
 
 remove_backup_pid_file()
 {
-    echo Removing backup pid file, ${backup_pid_file}. | tee -a $log_file
+    echo Removing backup pid file, ${backup_pid_file} | tee -a $log_file
     rm "${backup_pid_file}"
 }
 
 remove_prune_pid_file()
 {
-    echo Removing prune pid file, ${prune_pid_file}. | tee -a $log_file
+    echo Removing prune pid file, ${prune_pid_file} | tee -a $log_file
     rm "${prune_pid_file}"
 }

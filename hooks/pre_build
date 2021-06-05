@@ -58,8 +58,13 @@ alpine_base_image()
     local target=$1
     for index in ${!targets[*]}; do
         if [[ $target == ${targets[$index]} ]]; then
-            echo ${alpine_base_images[$index]}
-            return 0
+            if [[ $DOCKER_TAG == "latest" ]]; then
+                echo ${alpine_base_latest_images[$index]}
+                return 0
+            elif  [[ $DOCKER_TAG == "edge" ]]; then
+                echo ${alpine_base_edge_images[$index]}
+                return 0
+            fi
         fi
     done
 }

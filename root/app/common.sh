@@ -61,7 +61,7 @@ create_prune_pid_file()
 {
     # Expect PID as the first parmater
     pid=${1}
-    echo Creating prune pid file, ${prune_pid_file}, with pid=$pid}. | tee $log_file
+    echo Creating prune pid file, ${prune_pid_file}, with pid=${pid}. | tee $log_file
     echo ${pid} > "${prune_pid_file}"
 }
 

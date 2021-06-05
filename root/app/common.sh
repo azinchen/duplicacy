@@ -1,5 +1,16 @@
 #!/usr/bin/with-contenv bash
 
+hostname=""
+
+if [[ ! -z ${EMAIL_HOSTNAME_ALIAS} ]]; then
+    hostname=$EMAIL_HOSTNAME_ALIAS
+else
+    hostname=`hostname`
+fi
+
+backup_pid_file=/var/run/duplicacy_backup.pid
+prune_pid_file=/var/run/duplicacy_prune.pid
+
 converts()
 {
     T=$1
@@ -18,17 +29,6 @@ converts()
         printf '%02d:%02d:%02d' $H $M $S
     fi
 }
-
-hostname=""
-
-if [[ ! -z ${EMAIL_HOSTNAME_ALIAS} ]]; then
-    hostname=$EMAIL_HOSTNAME_ALIAS
-else
-    hostname=`hostname`
-fi
-
-backup_pid_file=/var/run/duplicacy_backup.pid
-prune_pid_file=/var/run/duplicacy_prune.pid
 
 operation_in_progress()
 {

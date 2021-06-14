@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv bash
+
+source "/app/common.sh"
+
+if [ -f ${backup_pid_file} ]; then
+    echo Unfinished backup task found. Removing backup pid file, ${backup_pid_file}
+    rm "${backup_pid_file}"
+fi
+
+if [ -f ${prune_pid_file} ]; then
+    echo Unfinished prune task found. Removing prune pid file, ${prune_pid_file}
+    rm "${prune_pid_file}"
+fi
+
+exit 0

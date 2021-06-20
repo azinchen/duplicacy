@@ -31,7 +31,7 @@ jobs:
       - name: Get build date
         shell: bash
         run: |
-          BUILD_DATE=date +%F_%H-%M-%S
+          BUILD_DATE=`date +%F_%H-%M-%S`
           echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
 
       - name: Read config file

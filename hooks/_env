@@ -1,3 +1,0 @@
-targets=(x86_64 armhf aarch64)
-alpine_base_latest_images=(alpine:latest arm32v6/alpine:latest arm64v8/alpine:latest)
-alpine_base_edge_images=(alpine:edge arm32v6/alpine:edge arm64v8/alpine:edge)

@@ -1,0 +1,136 @@
+name: CI_CD_Task
+
+on:
+  push:
+  repository_dispatch:
+    types: [on-deps-change]
+
+env:
+  CONFIG_FILE: settings.conf
+  OLD_DUPLICACY_VERSION: ""
+  OLD_S6_OVERLAY_VERSION: ""
+  NEW_DUPLICACY_VERSION: ""
+  NEW_S6_OVERLAY_VERSION: ""
+  GIT_BRANCH: ""
+  DOCKERHUB_USERNAME: "azinchen"
+
+jobs:
+  update_config_build_and_deploy:
+    name: Update config files, build and push Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get branch name
+        id: git
+        run: |
+          NAME=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
+          echo "GIT_BRANCH=$NAME" >> $GITHUB_ENV
+
+      - name: Read config file
+        shell: bash
+        run: |
+          github_repo_latest_tag()
+          {
+              local repo=$1
+              echo $(curl -Ls https://api.github.com/repos/$repo/tags | awk -F'"' '/name.*v[0-9]/ {print $4; exit}')
+          }
+          github_repo_latest_version()
+          {
+              local repo=$1
+              local latest_tag=$(github_repo_latest_tag $repo)
+              local version="${latest_tag:1}"
+              echo $version
+          }
+
+          source ${{ env.CONFIG_FILE }}
+
+          echo "OLD_DUPLICACY_VERSION=$DUPLICACY_VERSION" >> $GITHUB_ENV
+          echo "OLD_S6_OVERLAY_VERSION=$S6_OVERLAY_VERSION" >> $GITHUB_ENV
+
+          echo "NEW_DUPLICACY_VERSION=$(github_repo_latest_version gilbertchen/duplicacy)" >> $GITHUB_ENV
+          echo "NEW_S6_OVERLAY_VERSION=$(github_repo_latest_version just-containers/s6-overlay)" >> $GITHUB_ENV
+
+      - name: Update duplicacy version in config
+        if: ${{ env.OLD_DUPLICACY_VERSION != env.NEW_DUPLICACY_VERSION }}
+        shell: bash
+        run: |
+          echo "DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }}" > ${{ env.CONFIG_FILE }}
+          echo "S6_OVERLAY_VERSION=${{ env.OLD_S6_OVERLAY_VERSION }}" >> ${{ env.CONFIG_FILE }}
+
+      - name: Commit changes, Bump duplicacy to version ${{ env.NEW_DUPLICACY_VERSION }}
+        if: ${{ env.OLD_DUPLICACY_VERSION != env.NEW_DUPLICACY_VERSION }}
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
+          message: 'Bump duplicacy to version ${{ env.NEW_DUPLICACY_VERSION }}'
+          add: '${{ env.CONFIG_FILE }}'
+
+      - name: Update s6 overlay version in config
+        if: ${{ env.OLD_S6_OVERLAY_VERSION != env.NEW_S6_OVERLAY_VERSION }}
+        shell: bash
+        run: |
+          echo DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }} > ${{ env.CONFIG_FILE }}
+          echo S6_OVERLAY_VERSION=${{ env.NEW_S6_OVERLAY_VERSION }} >> ${{ env.CONFIG_FILE }}
+
+      - name: Commit changes, Bump s6 overlay to version ${{ env.NEW_S6_OVERLAY_VERSION }}
+        if: ${{ env.OLD_S6_OVERLAY_VERSION != env.NEW_S6_OVERLAY_VERSION }}
+        uses: EndBug/add-and-commit@v7
+        with:
+          default_author: github_actions
+          message: 'Bump s6 overlay to version ${{ env.NEW_S6_OVERLAY_VERSION }}'
+          add: '${{ env.CONFIG_FILE }}'
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
+
+      - name: Build and push latest and sha
+        if: ${{ env.GIT_BRANCH == 'main' || env.GIT_BRANCH == 'master' }}
+        uses: docker/build-push-action@v2
+        with:
+          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
+          build-args: DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }}
+          push: true
+          tags: |
+            ${{ github.repository }}:latest-${{ github.sha }}
+            ghcr.io/${{ github.repository }}:latest-${{ github.sha }}
+            ${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:latest
+
+      - name: Build and push branch
+        if: ${{ env.GIT_BRANCH != 'main' && env.GIT_BRANCH != 'master' }}
+        uses: docker/build-push-action@v2
+        with:
+          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
+          build-args: DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }}
+          push: true
+          tags: |
+            ${{ github.repository }}:${{ env.GIT_BRANCH }}
+            ghcr.io/${{ github.repository }}:${{ env.GIT_BRANCH }}
+
+      - name: Update repo description
+        if: ${{ env.GIT_BRANCH == 'main' || env.GIT_BRANCH == 'master' }}
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: ${{ github.repository }}

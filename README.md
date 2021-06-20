@@ -1,8 +1,8 @@
 # Duplicacy
 
 [![Docker Pulls][dockerhub-pulls]][dockerhub-link]
-[![Docker Build][dockerhub-build]][dockerhub-link]
-[![Docker Passing][dockerhub-passing]][dockerhub-link]
+[![GitHub build][github-build]][github-link]
+[![Docker image size][dockerhub-size]][dockerhub-link]
 [![GitHub Last Commit][github-lastcommit]][github-link]
 
 `azinchen/duplicacy` is a Docker image to easily perform automated backups. It uses [Duplicacy][duplicacy-home] under the hood, and therefore supports:
@@ -15,7 +15,7 @@
 
 ## Supported Architectures
 
-The image supports multiple architectures such as `amd64`, `arm` and `arm64`.
+The image supports multiple architectures such as `amd64`, `x86`, `arm/v6`, `arm/v7` and `arm64`.
 
 The new features are introduced to 'edge' version, but this version might contain issues. Avoid to use 'edge' image in production environment.
 
@@ -80,12 +80,12 @@ This project uses [Duplicacy][duplicacy-home], which is free for personal use bu
 If you have any problems with or questions about this image, please contact me through a [GitHub issue][github-issues] or [email][email-link].
 
 [dockerhub-pulls]: https://img.shields.io/docker/pulls/azinchen/duplicacy
-[dockerhub-build]: https://img.shields.io/docker/cloud/automated/azinchen/duplicacy
-[dockerhub-passing]: https://img.shields.io/docker/cloud/build/azinchen/duplicacy
 [dockerhub-link]: https://hub.docker.com/repository/docker/azinchen/duplicacy
+[dockerhub-size]: https://img.shields.io/docker/image-size/azinchen/duplicacy/latest
 [github-lastcommit]: https://img.shields.io/github/last-commit/azinchen/duplicacy
 [github-link]: https://github.com/azinchen/duplicacy
 [github-issues]: https://github.com/azinchen/duplicacy/issues
+[github-build]: https://img.shields.io/github/workflow/status/azinchen/duplicacy/CI_CD_Task
 [duplicacy-home]: https://duplicacy.com
 [duplicacy-license]: https://github.com/gilbertchen/duplicacy/blob/master/LICENSE.md
 [duplicacy-purchase]: https://duplicacy.com/buy.html

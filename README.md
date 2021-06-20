@@ -17,7 +17,7 @@
 
 The image supports multiple architectures such as `amd64`, `x86`, `arm/v6`, `arm/v7` and `arm64`.
 
-The new features are introduced to 'edge' version, but this version might contain issues. Avoid to use 'edge' image in production environment.
+The new features are introduced to `edge` version, but this version might contain issues. Avoid to use `edge` image in production environment.
 
 ## Starting an Duplicacy instance
 

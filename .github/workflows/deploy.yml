@@ -12,7 +12,6 @@ env:
   NEW_DUPLICACY_VERSION: ""
   NEW_S6_OVERLAY_VERSION: ""
   GIT_BRANCH: ""
-  DOCKERHUB_USERNAME: "azinchen"
 
 jobs:
   update_config_build_and_deploy:
@@ -93,7 +92,7 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to GitHub Container Registry

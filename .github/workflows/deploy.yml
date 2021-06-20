@@ -12,6 +12,7 @@ env:
   NEW_DUPLICACY_VERSION: ""
   NEW_S6_OVERLAY_VERSION: ""
   GIT_BRANCH: ""
+  BUILD_DATE: ""
 
 jobs:
   update_config_build_and_deploy:
@@ -22,10 +23,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Get branch name
-        id: git
+        shell: bash
         run: |
           NAME=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
           echo "GIT_BRANCH=$NAME" >> $GITHUB_ENV
+
+      - name: Get build date
+        shell: bash
+        run: |
+          BUILD_DATE=date +%F_%H-%M-%S
+          echo "BUILD_DATE=$BUILD_DATE" >> $GITHUB_ENV
 
       - name: Read config file
         shell: bash
@@ -110,8 +117,8 @@ jobs:
           build-args: DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }}
           push: true
           tags: |
-            ${{ github.repository }}:latest-${{ github.sha }}
-            ghcr.io/${{ github.repository }}:latest-${{ github.sha }}
+            ${{ github.repository }}:latest-${{ env.BUILD_DATE }}
+            ghcr.io/${{ github.repository }}:latest-${{ env.BUILD_DATE }}
             ${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:latest
 

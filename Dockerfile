@@ -11,10 +11,10 @@ RUN echo "**** upgrade packages ****" \
     && echo "**** download s6 overlay ****"
 RUN S6_ARCH=$(case ${TARGETPLATFORM} in \
         "linux/amd64")  echo "amd64"    ;; \
+        "linux/386")    echo "x86"      ;; \
         "linux/arm64")  echo "aarch64"  ;; \
         "linux/arm/v7") echo "armhf"    ;; \
         "linux/arm/v6") echo "arm"      ;; \
-        "linux/386")    echo "x86"      ;; \
         *)              echo ""         ;; esac) \
     && echo "s6 overlay platform selected "$S6_ARCH \
     && wget -q https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-${S6_ARCH}.tar.gz -qO /tmp/s6-overlay.tar.gz \

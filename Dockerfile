@@ -10,12 +10,13 @@ RUN echo "**** upgrade packages ****" \
     && mkdir -p /s6 \
     && echo "**** download s6 overlay ****"
 RUN S6_ARCH=$(case ${TARGETPLATFORM} in \
-        "linux/amd64")  echo "amd64"    ;; \
-        "linux/386")    echo "x86"      ;; \
-        "linux/arm64")  echo "aarch64"  ;; \
-        "linux/arm/v7") echo "armhf"    ;; \
-        "linux/arm/v6") echo "arm"      ;; \
-        *)              echo ""         ;; esac) \
+        "linux/amd64")    echo "amd64"    ;; \
+        "linux/386")      echo "x86"      ;; \
+        "linux/arm64")    echo "aarch64"  ;; \
+        "linux/arm/v7")   echo "armhf"    ;; \
+        "linux/arm/v6")   echo "arm"      ;; \
+        "linux/ppc64le")  echo "ppc64le"  ;; \
+        *)                echo ""         ;; esac) \
     && echo "s6 overlay platform selected "$S6_ARCH \
     && wget -q https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-${S6_ARCH}.tar.gz -qO /tmp/s6-overlay.tar.gz \
     && tar xfz /tmp/s6-overlay.tar.gz -C /s6/

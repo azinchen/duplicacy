@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.3
 
       - name: Read config file
         shell: bash
@@ -45,7 +45,7 @@ jobs:
 
       - name: Fire 'on-deps-change' repository dispatch
         if: ${{ env.OLD_DUPLICACY_VERSION != env.NEW_DUPLICACY_VERSION || env.OLD_S6_OVERLAY_VERSION != env.NEW_S6_OVERLAY_VERSION }}
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v1.1.0
         with:
           token: ${{ secrets.DUPLICACY_REPO_PAT }}
           event-type: on-deps-change

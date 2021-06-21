@@ -65,12 +65,12 @@ jobs:
           echo "DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }}" > ${{ env.CONFIG_FILE }}
           echo "S6_OVERLAY_VERSION=${{ env.OLD_S6_OVERLAY_VERSION }}" >> ${{ env.CONFIG_FILE }}
 
-      - name: Commit changes, Bump duplicacy to version ${{ env.NEW_DUPLICACY_VERSION }}
+      - name: Commit changes, Bump duplicacy from ${{ env.OLD_DUPLICACY_VERSION }} to ${{ env.NEW_DUPLICACY_VERSION }}
         if: ${{ env.OLD_DUPLICACY_VERSION != env.NEW_DUPLICACY_VERSION }}
         uses: EndBug/add-and-commit@v7
         with:
           default_author: github_actions
-          message: 'Bump duplicacy to version ${{ env.NEW_DUPLICACY_VERSION }}'
+          message: 'Bump duplicacy from ${{ env.OLD_DUPLICACY_VERSION }} to ${{ env.NEW_DUPLICACY_VERSION }}'
           add: '${{ env.CONFIG_FILE }}'
 
       - name: Update s6 overlay version in config
@@ -80,12 +80,12 @@ jobs:
           echo DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }} > ${{ env.CONFIG_FILE }}
           echo S6_OVERLAY_VERSION=${{ env.NEW_S6_OVERLAY_VERSION }} >> ${{ env.CONFIG_FILE }}
 
-      - name: Commit changes, Bump s6 overlay to version ${{ env.NEW_S6_OVERLAY_VERSION }}
+      - name: Commit changes, Bump s6 overlay from ${{ env.OLD_S6_OVERLAY_VERSION }} to ${{ env.NEW_S6_OVERLAY_VERSION }}
         if: ${{ env.OLD_S6_OVERLAY_VERSION != env.NEW_S6_OVERLAY_VERSION }}
         uses: EndBug/add-and-commit@v7
         with:
           default_author: github_actions
-          message: 'Bump s6 overlay to version ${{ env.NEW_S6_OVERLAY_VERSION }}'
+          message: 'Bump s6 overlay from ${{ env.OLD_S6_OVERLAY_VERSION }} to ${{ env.NEW_S6_OVERLAY_VERSION }}'
           add: '${{ env.CONFIG_FILE }}'
 
       - name: Set up QEMU

@@ -111,7 +111,7 @@ jobs:
 
       - name: Build and push latest and sha
         if: ${{ env.GIT_BRANCH == 'main' || env.GIT_BRANCH == 'master' }}
-        uses: docker/build-push-action@v2.4.0
+        uses: docker/build-push-action@v2.5.0
         with:
           platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
           build-args: DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }}
@@ -124,7 +124,7 @@ jobs:
 
       - name: Build and push branch
         if: ${{ env.GIT_BRANCH != 'main' && env.GIT_BRANCH != 'master' }}
-        uses: docker/build-push-action@v2.4.0
+        uses: docker/build-push-action@v2.5.0
         with:
           platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
           build-args: DUPLICACY_VERSION=${{ env.NEW_DUPLICACY_VERSION }}

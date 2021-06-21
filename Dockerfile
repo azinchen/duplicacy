@@ -31,10 +31,10 @@ RUN echo "**** upgrade packages ****" \
     && echo "**** download duplicacy ****"
 RUN DUPLICACY_ARCH=$(case ${TARGETPLATFORM} in \
         "linux/amd64")  echo "x64"    ;; \
+        "linux/386")    echo "i386"   ;; \
         "linux/arm64")  echo "arm64"  ;; \
         "linux/arm/v7") echo "arm"    ;; \
         "linux/arm/v6") echo "arm"    ;; \
-        "linux/386")    echo "i386"   ;; \
         *)              echo ""       ;; esac) \
     && echo "Duplicacy platform selected "$DUPLICACY_ARCH \
     && wget -q https://github.com/gilbertchen/duplicacy/releases/latest/download/duplicacy_linux_${DUPLICACY_ARCH}_${DUPLICACY_VERSION} -qO /tmp/duplicacy

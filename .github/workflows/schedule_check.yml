@@ -45,7 +45,7 @@ jobs:
 
       - name: Fire 'on-deps-change' repository dispatch
         if: ${{ env.OLD_DUPLICACY_VERSION != env.NEW_DUPLICACY_VERSION || env.OLD_S6_OVERLAY_VERSION != env.NEW_S6_OVERLAY_VERSION }}
-        uses: peter-evans/repository-dispatch@v1.1.0
+        uses: peter-evans/repository-dispatch@v1.1.3
         with:
           token: ${{ secrets.DUPLICACY_REPO_PAT }}
           event-type: on-deps-change

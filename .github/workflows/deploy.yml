@@ -137,6 +137,7 @@ jobs:
         if: ${{ env.GIT_BRANCH == 'main' || env.GIT_BRANCH == 'master' }}
         uses: peter-evans/dockerhub-description@v2
         with:
-          username: ${{ github.repository_owner }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           repository: ${{ github.repository }}
+          short-description: ${{ github.event.repository.description }}

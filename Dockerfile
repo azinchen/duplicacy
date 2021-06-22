@@ -1,4 +1,4 @@
-FROM alpine:3.13 AS s6-builder
+FROM docker.io/alpine:3.13 AS s6-builder
 
 ARG TARGETPLATFORM
 
@@ -39,7 +39,7 @@ RUN DUPLICACY_ARCH=$(case ${TARGETPLATFORM} in \
     && echo "Duplicacy platform selected "$DUPLICACY_ARCH \
     && wget -q https://github.com/gilbertchen/duplicacy/releases/latest/download/duplicacy_linux_${DUPLICACY_ARCH}_${DUPLICACY_VERSION} -qO /tmp/duplicacy
 
-FROM alpine:3.13
+FROM docker.io/alpine:3.13
 
 LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 

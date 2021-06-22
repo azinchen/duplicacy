@@ -5,3 +5,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+
+  # Configuration for Dockerfile
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"

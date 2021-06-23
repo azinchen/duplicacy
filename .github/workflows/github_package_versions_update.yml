@@ -85,7 +85,7 @@ jobs:
           echo "============="
           echo $json
           echo "============="
-          cat $json > ${{ env.CONFIG_FILE }}
+          echo $json > ${{ env.CONFIG_FILE }}
           echo "Updated file"
           echo "============"
           cat ${{ env.CONFIG_FILE }}

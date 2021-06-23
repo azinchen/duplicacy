@@ -16,11 +16,9 @@ jobs:
 
       - name: Get branch name
         id: branch
-        env:
-          VALUE: ""
         shell: bash
         run: |
-          VALUE=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
+          export VALUE=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
           echo "Action branch=$VALUE"
 
       - name: Print branch name

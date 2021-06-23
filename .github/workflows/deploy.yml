@@ -20,7 +20,7 @@ jobs:
         run: |
           branch=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
           echo "::set-output name=branch::$branch"
-          echo "Action branch=$date"
+          echo "Action branch=$branch"
 
       - name: Get build date
         id: date

@@ -73,7 +73,7 @@ jobs:
           echo "PR found $found"
 
       - name: Update ${{ env.CONFIG_FILE }}
-        if: ${{ steps.config_version.outputs.version == steps.repository_version.outputs.version && steps.test_pr.outputs.found == "no" }}
+        if: ${{ steps.config_version.outputs.version == steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' }}
         shell: bash
         run: |
           echo "Original file"
@@ -89,7 +89,7 @@ jobs:
           cat ${{ env.CONFIG_FILE }}
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
-        if: ${{ steps.config_version.outputs.version == steps.repository_version.outputs.version && steps.test_pr.outputs.found == "no" }}
+        if: ${{ steps.config_version.outputs.version == steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' }}
         uses: peter-evans/create-pull-request@v3.10.0
         with:
           token: ${{ secrets.DUPLICACY_REPO_PAT }}

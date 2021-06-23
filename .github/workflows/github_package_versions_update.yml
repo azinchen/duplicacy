@@ -65,7 +65,7 @@ jobs:
           echo "PR found $found"
 
       - name: Update ${{ env.CONFIG_FILE }}
-        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == "false" }}
+        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == false }}
         shell: bash
         run: |
           jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} > ${{ env.CONFIG_FILE }}

@@ -19,12 +19,12 @@ jobs:
         shell: bash
         run: |
           export VALUE=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
-          echo "::set-env name=VALUE::$VALUE"
+          echo "::set-output name=VALUE::$VALUE"
           echo "Action branch=$VALUE"
 
       - name: Print branch name
         shell: bash
-        run: echo "Branch name ${{ steps.branch.VALUE }}"
+        run: echo "Branch name ${{ steps.branch.outputs.VALUE }}"
 
       - name: Get build date
         id: date

@@ -68,7 +68,7 @@ jobs:
         uses: docker/build-push-action@v2.5.0
         with:
           platforms: ${{ env.PLATFORMS }}
-          push: push
+          push: true
           tags: |
             ${{ github.repository }}:${{ steps.branch.outputs.branch }}
             ghcr.io/${{ github.repository }}:${{ steps.branch.outputs.branch }}

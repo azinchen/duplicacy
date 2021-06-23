@@ -85,8 +85,9 @@ jobs:
         if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' && steps.branch.outputs.raised_from_pr == 'no' }}
         shell: bash
         run: |
-          json=$(jq '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} | jq -s)
-          echo $json > ${{ env.CONFIG_FILE }}
+          tempfilename=$(tempfile -d .)
+          jq '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} | jq -s > $tempfilename
+          mv $tempfilename ${{ env.CONFIG_FILE }}
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
         if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' && steps.branch.outputs.raised_from_pr == 'no' }}

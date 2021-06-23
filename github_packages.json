@@ -1,0 +1,10 @@
+[
+    {
+        "name": "gilbertchen/duplicacy",
+        "version": "2.7.2"
+    },
+    {
+        "name": "just-containers/s6-overlay",
+        "version": "2.2.0.3"
+    }
+]

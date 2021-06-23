@@ -51,20 +51,31 @@ jobs:
         run: |
           latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | jq -r "first.name")
           version="${latest_tag:1}"
+          branch="packagebot/github_actions/${{ matrix.repository }}-${{ steps.repository_version.outputs.version }}"
           echo "::set-output name=version::$version"
-          echo "Repository version=$version"
+          echo "::set-output name=branch::$branch"
+          echo "Repository version=$version, branch=$branch"
+
+      - name: Test PR already exists
+        id: test_pr
+        shell: bash
+        run: |
+          found=$(git branch -r | grep -q main; if (( ! $? ));then echo true;else echo false;fi)
+          echo "::set-output name=found::$found"
+          echo "PR found $found"
 
       - name: Update ${{ env.CONFIG_FILE }}
-        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version }}
+        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == "false" }}
         shell: bash
         run: |
           jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} > ${{ env.CONFIG_FILE }}
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
-        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version }}
+        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == "false" }}
         uses: peter-evans/create-pull-request@v3.10.0
         with:
           token: ${{ secrets.DUPLICACY_REPO_PAT }}
+          branch: ${{ steps.repository_version.outputs.branch }}
           commit-message: Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
           delete-branch: true
           title: Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}

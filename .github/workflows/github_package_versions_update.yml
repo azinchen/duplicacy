@@ -52,7 +52,7 @@ jobs:
           latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | awk -F'"' '/name.*v[0-9]/ {print $4; exit}')
           version="${latest_tag:1}"
           echo "::set-output name=version::$version"
-          echo "Repository version=$version, latest_tag=$latest_tag"
+          echo "Repository version=$version
 
       - name: Update ${{ env.CONFIG_FILE }}
         if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version }}

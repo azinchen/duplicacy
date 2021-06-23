@@ -49,7 +49,7 @@ jobs:
         id: repository_version
         shell: bash
         run: |
-          latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | awk -F'"' '/name.*v[0-9]/ {print $4; exit}')
+          latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | jq -r "first.name")
           version="${latest_tag:1}"
           echo "::set-output name=version::$version"
           echo "Repository version=$version"

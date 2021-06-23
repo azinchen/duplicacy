@@ -11,7 +11,7 @@ RUN echo "**** upgrade packages ****" \
     && apk --no-cache --no-progress add tar jq \
     && echo "**** create folders ****" \
     && mkdir -p /s6 \
-    && echo "**** download s6 overlay ****" \
+    && echo "**** download ${PACKAGE} ****" \
     && ARCH=$(case ${TARGETPLATFORM} in \
         "linux/amd64")    echo "amd64"    ;; \
         "linux/386")      echo "x86"      ;; \
@@ -36,7 +36,7 @@ RUN echo "**** upgrade packages ****" \
     && apk --no-cache --no-progress upgrade \
     && echo "**** install packages ****" \
     && apk --no-cache --no-progress add jq \
-    && echo "**** download duplicacy ****" \
+    && echo "**** download ${PACKAGE} ****" \
     && ARCH=$(case ${TARGETPLATFORM} in \
         "linux/amd64")  echo "x64"    ;; \
         "linux/386")    echo "i386"   ;; \

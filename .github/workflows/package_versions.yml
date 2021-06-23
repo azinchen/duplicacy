@@ -23,11 +23,13 @@ jobs:
         id: branch
         shell: bash
         run: |
-          full_branch=${GITHUB_REF}
+          raised_from_pr=$(cat ${GITHUB_REF} | grep -q "/packageupdaterbot/"; if (( ! $? ));then echo "yes";else echo "no";fi)
+          echo "::set-output name=raised_from_pr::$raised_from_pr"
+
           branch=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
-          echo "::set-output name=full_branch::$full_branch"
           echo "::set-output name=branch::$branch"
-          echo "Base branch=$branch, full_branch=$full_branch"
+
+          echo "Base branch=$branch, raised_from_pr=$raised_from_pr"
 
       - name: Create package versions file if not exists
         shell: bash
@@ -75,17 +77,14 @@ jobs:
           echo "PR found $found"
 
       - name: Update ${{ env.CONFIG_FILE }}
-        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' }}
+        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' && steps.branch.outputs.raised_from_pr == 'no' }}
         shell: bash
         run: |
-          echo "Original file"
-          echo "============="
-          cat ${{ env.CONFIG_FILE }}
           json=$(jq '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} | jq -s)
           echo $json > ${{ env.CONFIG_FILE }}
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
-        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' }}
+        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' && steps.branch.outputs.raised_from_pr == 'no' }}
         uses: peter-evans/create-pull-request@v3.10.0
         with:
           token: ${{ secrets.DUPLICACY_REPO_PAT }}

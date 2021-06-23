@@ -23,9 +23,11 @@ jobs:
         id: branch
         shell: bash
         run: |
+          full_branch=${GITHUB_REF}
           branch=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
+          echo "::set-output name=full_branch::$full_branch"
           echo "::set-output name=branch::$branch"
-          echo "Base branch=$branch"
+          echo "Base branch=$branch, full_branch=$full_branch"
 
       - name: Create package versions file if not exists
         shell: bash
@@ -79,14 +81,8 @@ jobs:
           echo "Original file"
           echo "============="
           cat ${{ env.CONFIG_FILE }}
-          json=$(jq '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} | jq -s -c | jq '.')
-          echo "Temp file"
-          echo "============="
-          echo $json
+          json=$(jq '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} | jq -s)
           echo $json > ${{ env.CONFIG_FILE }}
-          echo "Updated file"
-          echo "============"
-          cat ${{ env.CONFIG_FILE }}
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
         if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' }}

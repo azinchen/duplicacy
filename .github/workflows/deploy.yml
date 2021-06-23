@@ -25,7 +25,7 @@ jobs:
 
       - name: Print branch name
         shell: bash
-        run: echo "Branch name ${{ steps.branch.value }}"
+        run: echo "Branch name ${{ steps.branch.VALUE }}"
 
       - name: Get build date
         id: date

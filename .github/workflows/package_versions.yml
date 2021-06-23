@@ -23,7 +23,7 @@ jobs:
         id: branch
         shell: bash
         run: |
-          raised_from_pr=$(cat ${GITHUB_REF} | grep -q "/packageupdaterbot/"; if (( ! $? ));then echo "yes";else echo "no";fi)
+          raised_from_pr=$(cat ${GITHUB_REF} | grep -q "packageupdaterbot/"; if (( ! $? ));then echo "yes";else echo "no";fi)
           echo "::set-output name=raised_from_pr::$raised_from_pr"
 
           branch=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")

@@ -21,6 +21,10 @@ jobs:
           VALUE=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
           echo "Action branch=$VALUE"
 
+      - name: Print branch name
+        shell: bash
+        run: echo "Branch name ${{ steps.branch.value }}"
+
       - name: Get build date
         id: date
         shell: bash
@@ -66,7 +70,7 @@ jobs:
         uses: docker/build-push-action@v2.5.0
         with:
           platforms: ${{ env.PLATFORMS }}
-          push: true
+          push: push
           tags: |
             ${{ github.repository }}:${{ steps.branch.value }}
             ghcr.io/${{ github.repository }}:${{ steps.branch.value }}

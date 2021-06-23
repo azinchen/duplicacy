@@ -64,7 +64,6 @@ jobs:
         if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version }}
         uses: peter-evans/create-pull-request@v3.10.0
         with:
-          path: ${{ env.CONFIG_FILE }}
           token: ${{ secrets.DUPLICACY_REPO_PAT }}
           commit-message: Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
           delete-branch: true

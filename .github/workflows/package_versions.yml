@@ -2,8 +2,8 @@ name: Update_GitHub_package_versions
 
 on:
   push:
-#  schedule:
-#    - cron: 0 */3 * * *
+  schedule:
+    - cron: 0 */3 * * *
 
 env:
   CONFIG_FILE: "github_packages.json"

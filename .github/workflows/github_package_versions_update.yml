@@ -19,6 +19,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.0
 
+      - name: Get branch name
+        id: branch
+        shell: bash
+        run: |
+          branch=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")
+          echo "::set-output name=branch::$branch"
+          echo "Base branch=$branch"
+
       - name: Create package versions file if not exists
         shell: bash
         run: |
@@ -51,7 +59,7 @@ jobs:
         run: |
           latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | jq -r "first.name")
           version="${latest_tag:1}"
-          branch="packagebot/github_actions/${{ matrix.repository }}-$version"
+          branch="github_actions/${{ matrix.repository }}-$version"
           echo "::set-output name=version::$version"
           echo "::set-output name=branch::$branch"
           echo "Repository version=$version, branch=$branch"
@@ -68,7 +76,15 @@ jobs:
         if: ${{ steps.test_pr.outputs.found == 'false' }}
         shell: bash
         run: |
+          echo "Original file"
+          echo "============="
+          cat ${{ env.CONFIG_FILE }}
+          echo "============="
           jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} > ${{ env.CONFIG_FILE }}
+          echo "Updated file"
+          echo "============"
+          cat ${{ env.CONFIG_FILE }}
+          echo "============"
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
         if: ${{ steps.test_pr.outputs.found == 'false' }}

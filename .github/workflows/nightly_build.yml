@@ -1,12 +1,12 @@
-name: nightly_build
+name: Nightly_build
 
 on:
   schedule:
     - cron: 0 2 * * *
 
 env:
-  CONFIG_FILE: settings.conf
-  CONFIG_DUPLICACY_VERSION: ""
+  BRANCH: "edge"
+  PLATFORMS: "linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6"
 
 jobs:
   nightly_build:
@@ -16,22 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
         with:
-          ref: edge
-
-      - name: Read config file
-        shell: bash
-        run: |
-          source ${{ env.CONFIG_FILE }}
-
-          echo "CONFIG_DUPLICACY_VERSION=$DUPLICACY_VERSION" >> $GITHUB_ENV
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1.2.0
-        with:
-          platforms: all
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1.3.0
+          ref: ${{ env.BRANCH }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v1.10.0
@@ -46,12 +31,19 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ github.token }}
 
-      - name: Build and push edge
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+        with:
+          platforms: ${{ env.PLATFORMS }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1.3.0
+
+      - name: Build and push ${{ env.BRANCH }}
         uses: docker/build-push-action@v2.5.0
         with:
-          platforms: linux/amd64,linux/386,linux/arm64,linux/arm/v7,linux/arm/v6
-          build-args: DUPLICACY_VERSION=${{ env.CONFIG_DUPLICACY_VERSION }}
+          platforms: ${{ env.PLATFORMS }}
           push: true
           tags: |
-            ${{ github.repository }}:edge
-            ghcr.io/${{ github.repository }}:edge
+            ${{ github.repository }}:${{ env.BRANCH }}
+            ghcr.io/${{ github.repository }}:${{ env.BRANCH }}

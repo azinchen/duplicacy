@@ -16,6 +16,8 @@ jobs:
 
       - name: Get branch name
         id: branch
+        env:
+          VALUE: ""
         shell: bash
         run: |
           VALUE=$(echo ${GITHUB_REF} | sed -e "s/.*\///g")

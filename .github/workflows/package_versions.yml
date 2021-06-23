@@ -32,6 +32,7 @@ jobs:
           echo "Base branch=$branch, raised_from_pr=$raised_from_pr"
 
       - name: Create package versions file if not exists
+        if: ${{ steps.branch.outputs.raised_from_pr == 'no' }}
         shell: bash
         run: |
           if [[ ! -f "${{ env.CONFIG_FILE }}" ]]; then
@@ -40,6 +41,7 @@ jobs:
           fi
 
       - name: Create node if not exists
+        if: ${{ steps.branch.outputs.raised_from_pr == 'no' }}
         shell: bash
         run: |
           NODE=`jq -r '.[] | select(.name == "${{ matrix.repository }}").name'`
@@ -50,6 +52,7 @@ jobs:
           fi
 
       - name: Read config version
+        if: ${{ steps.branch.outputs.raised_from_pr == 'no' }}
         id: config_version
         shell: bash
         run: |
@@ -58,6 +61,7 @@ jobs:
           echo "Config version=$version"
 
       - name: Read repository version
+        if: ${{ steps.branch.outputs.raised_from_pr == 'no' }}
         id: repository_version
         shell: bash
         run: |
@@ -69,6 +73,7 @@ jobs:
           echo "Repository version=$version, branch=$branch"
 
       - name: Test PR already exists
+        if: ${{ steps.branch.outputs.raised_from_pr == 'no' }}
         id: test_pr
         shell: bash
         run: |

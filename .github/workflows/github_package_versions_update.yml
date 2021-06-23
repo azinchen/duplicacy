@@ -83,7 +83,7 @@ jobs:
           json=$(jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }})
           echo "Temp file"
           echo "============="
-          cat $json
+          echo $json
           echo "============="
           cat $json > ${{ env.CONFIG_FILE }}
           echo "Updated file"

@@ -49,22 +49,10 @@ jobs:
         id: repository_version
         shell: bash
         run: |
-          github_repo_latest_tag()
-          {
-              local repo=$1
-              echo $(curl -Ls https://api.github.com/repos/$repo/tags | awk -F'"' '/name.*v[0-9]/ {print $4; exit}')
-          }
-          github_repo_latest_version()
-          {
-              local repo=$1
-              local latest_tag=$(github_repo_latest_tag $repo)
-              local version="${latest_tag:1}"
-              echo $version
-          }
-
-          version=$(github_repo_latest_version ${{ matrix.repository }})
+          latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | awk -F'"' '/name.*v[0-9]/ {print $4; exit}')
+          version=${tag:1}
           echo "::set-output name=version::$version"
-          echo "Repository version=$version"
+          echo "Repository version=$version, latest_tag=$latest_tag"
 
       - name: Update ${{ env.CONFIG_FILE }}
         if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version }}

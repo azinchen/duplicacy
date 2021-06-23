@@ -80,7 +80,7 @@ jobs:
           echo "============="
           cat ${{ env.CONFIG_FILE }}
           echo "============="
-          json=$(jq 'select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} | jq -s)
+          json=$(jq '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} | jq -s)
           echo "Temp file"
           echo "============="
           echo $json

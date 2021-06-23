@@ -59,7 +59,7 @@ jobs:
         run: |
           latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | jq -r "first.name")
           version="${latest_tag:1}"
-          branch="github_actions/${{ matrix.repository }}-$version"
+          branch="packageupdaterbot/${{ matrix.repository }}-$version"
           echo "::set-output name=version::$version"
           echo "::set-output name=branch::$branch"
           echo "Repository version=$version, branch=$branch"
@@ -80,7 +80,12 @@ jobs:
           echo "============="
           cat ${{ env.CONFIG_FILE }}
           echo "============="
-          echo `jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }}` | tee ${{ env.CONFIG_FILE }}
+          json=$(`jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }})
+          echo "Temp file"
+          echo "============="
+          cat $json
+          echo "============="
+          cat $json > ${{ env.CONFIG_FILE }}
           echo "Updated file"
           echo "============"
           cat ${{ env.CONFIG_FILE }}

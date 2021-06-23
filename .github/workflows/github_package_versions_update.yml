@@ -51,7 +51,7 @@ jobs:
         run: |
           latest_tag=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | jq -r "first.name")
           version="${latest_tag:1}"
-          branch="packagebot/github_actions/${{ matrix.repository }}-${{ steps.repository_version.outputs.version }}"
+          branch="packagebot/github_actions/${{ matrix.repository }}-$version"
           echo "::set-output name=version::$version"
           echo "::set-output name=branch::$branch"
           echo "Repository version=$version, branch=$branch"

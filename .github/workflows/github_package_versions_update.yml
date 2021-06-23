@@ -60,7 +60,7 @@ jobs:
         id: test_pr
         shell: bash
         run: |
-          found=$(git branch -r | grep -q main; if (( ! $? ));then echo true;else echo false;fi)
+          found=$(git branch -r | grep -q ${{ steps.repository_version.outputs.branch }}; if (( ! $? ));then echo true;else echo false;fi)
           echo "::set-output name=found::$found"
           echo "PR found $found"
 

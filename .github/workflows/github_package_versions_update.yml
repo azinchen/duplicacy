@@ -80,7 +80,7 @@ jobs:
           echo "============="
           cat ${{ env.CONFIG_FILE }}
           echo "============="
-          jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }} > ${{ env.CONFIG_FILE }}
+          $(jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version = "'${{ steps.repository_version.outputs.version }}'"' ${{ env.CONFIG_FILE }}) | tee ${{ env.CONFIG_FILE }}
           echo "Updated file"
           echo "============"
           cat ${{ env.CONFIG_FILE }}

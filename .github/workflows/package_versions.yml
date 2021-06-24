@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        repository: ["gilbertchen/duplicacy", "just-containers/s6-overlay","bubuntux/nordvpn"]
+        repository: ["gilbertchen/duplicacy", "just-containers/s6-overlay"]
     steps:
       - name: Checkout
         uses: actions/checkout@v2.3.4
@@ -48,11 +48,7 @@ jobs:
 
           if [[ NODE != ${{ matrix.repository }} ]]; then
             echo "Information about ${{ matrix.repository }} package not found in ${{ env.CONFIG_FILE }}, create empty"
-            new_node="{\"name\":\"${{ matrix.repository }}\",\"version\":\"\"}"
-            updated=$(jq -r '.[]' ${{ env.CONFIG_FILE }})$(echo $new_node)
-            tempfilename=$(tempfile -d .)
-            $(echo $updated | jq -s) > $tempfilename
-            mv $tempfilename ${{ env.CONFIG_FILE }}
+            echo "TEMPORARILY NOT SUPPORTED, update ${{ env.CONFIG_FILE }} manually"
           fi
 
       - name: Read config version

@@ -68,10 +68,6 @@ jobs:
         uses: docker/build-push-action@v2.5.0
         with:
           platforms: ${{ env.PLATFORMS }}
-          push: true
-          tags: |
-            ${{ github.repository }}:${{ steps.branch.outputs.branch }}
-            ghcr.io/${{ github.repository }}:${{ steps.branch.outputs.branch }}
 
       - name: Update repo description
         if: ${{ steps.branch.outputs.branch == 'main' || steps.branch.outputs.branch == 'master' }}

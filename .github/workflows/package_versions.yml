@@ -82,7 +82,9 @@ jobs:
           echo "PR found $found"
 
       - name: Update ${{ env.CONFIG_FILE }}
-        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' && steps.branch.outputs.raised_from_pr == 'no' }}
+        if: ${{ (steps.config_version.outputs.version != steps.repository_version.outputs.version) &&
+                (steps.test_pr.outputs.found == 'no') &&
+                (steps.branch.outputs.raised_from_pr == 'no') }}
         shell: bash
         run: |
           tempfilename=$(tempfile -d .)
@@ -90,12 +92,15 @@ jobs:
           mv $tempfilename ${{ env.CONFIG_FILE }}
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
-        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version && steps.test_pr.outputs.found == 'no' && steps.branch.outputs.raised_from_pr == 'no' }}
+        if: ${{ (steps.config_version.outputs.version != steps.repository_version.outputs.version) &&
+                (steps.test_pr.outputs.found == 'no') &&
+                (steps.branch.outputs.raised_from_pr == 'no') }}
         uses: peter-evans/create-pull-request@v3.10.0
         with:
           token: ${{ secrets.DUPLICACY_REPO_PAT }}
           branch: ${{ steps.repository_version.outputs.branch }}
-          commit-message: Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
+          commit-message: Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} \
+                          to ${{ steps.repository_version.outputs.version }}
           delete-branch: true
           title: Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
           body: |

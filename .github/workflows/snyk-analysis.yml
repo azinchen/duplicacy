@@ -1,4 +1,4 @@
-name: Snyk_Analysis
+name: Snyk Analysis
 
 on:
   schedule:

@@ -1,4 +1,4 @@
-name: Update_GitHub_package_versions
+name: Update GitHub package versions
 
 on:
   schedule:
@@ -70,7 +70,7 @@ jobs:
         shell: bash
         run: |
           TAG=$(curl -Ls https://api.github.com/repos/${{ matrix.repository }}/tags | jq -r "first.name")
-          VERSION="${TAG:1}"
+          VERSION=${TAG:1}
           BRANCH="packageupdaterbot/${{ matrix.repository }}-${VERSION}"
           echo "::set-output name=version::${VERSION}"
           echo "::set-output name=branch::${BRANCH}"

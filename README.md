@@ -13,6 +13,8 @@
 - Multi-versioning
 - ... and more generally, all the features that duplicacy has.
 
+`azinchen/duplicacy` uses [Duplicacy Command Line version][duplicacy-github] version `2.7.2`.
+
 ## Supported Architectures
 
 The image supports multiple architectures such as `amd64`, `x86`, `arm/v6`, `arm/v7` and `arm64`.
@@ -64,7 +66,7 @@ Container images are configured using environment variables passed at runtime.
 
 ## Disclaimer
 
-This project uses [Duplicacy][duplicacy-home], which is free for personal use but requires [purchasing a licence][duplicacy-purchase] for non-trial commercial use. See the detailed terms [here][duplicacy-license].
+This project uses [Duplicacy Command Line version][duplicacy-github], which is free for personal use but requires [purchasing a licence][duplicacy-purchase] for non-trial commercial use. See the detailed terms [here][duplicacy-license].
 
 ## Issues
 
@@ -78,6 +80,7 @@ If you have any problems with or questions about this image, please contact me t
 [github-issues]: https://github.com/azinchen/duplicacy/issues
 [github-build]: https://img.shields.io/github/workflow/status/azinchen/duplicacy/CI_CD_Task
 [duplicacy-home]: https://duplicacy.com
+[duplicacy-github]: https://github.com/gilbertchen/duplicacy
 [duplicacy-license]: https://github.com/gilbertchen/duplicacy/blob/master/LICENSE.md
 [duplicacy-purchase]: https://duplicacy.com/buy.html
 [duplicacy-forum]: https://forum.duplicacy.com

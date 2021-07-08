@@ -60,7 +60,7 @@ jobs:
         id: config_version
         shell: bash
         run: |
-          VERSION=$(jq -r '.[] | select(.name == "'${{ matrix.repository }}'").version' ${{ env.CONFIG_FILE }})
+          VERSION=$(jq -r '.[] | select(.name == "${{ matrix.repository }}").version' ${{ env.CONFIG_FILE }})
           echo "::set-output name=version::${VERSION}"
           echo "Config version=${VERSION}"
 

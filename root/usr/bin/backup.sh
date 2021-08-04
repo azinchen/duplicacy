@@ -33,7 +33,7 @@ create_backup_pid_file()
 
 remove_backup_pid_file()
 {
-    echo Removing backup pid file, "${backup_pid_file}" | tee -a "$log_file"
+    echo Removing backup pid file, "${backup_pid_file}"
     rm "${backup_pid_file}"
 }
 

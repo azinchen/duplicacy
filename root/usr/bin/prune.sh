@@ -30,7 +30,7 @@ create_prune_pid_file()
 
 remove_prune_pid_file()
 {
-    echo Removing prune pid file, "${prune_pid_file}" | tee -a "$log_file"
+    echo Removing prune pid file, "${prune_pid_file}"
     rm "${prune_pid_file}"
 }
 

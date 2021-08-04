@@ -48,14 +48,10 @@ RUN echo "**** install packages ****" && \
 # rootfs builder
 FROM alpine:3.14 AS rootfs-builder
 
-RUN echo "**** create folders ****" && \
-    mkdir -p /rootfs/usr/bin
-
-COPY --from=s6-builder /s6/ /rootfs/
-COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/bin/duplicacy
 COPY root/ /rootfs/
-
+COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/bin/duplicacy
 RUN chmod +x /rootfs/usr/bin/*
+COPY --from=s6-builder /s6/ /rootfs/
 
 # Main image
 FROM alpine:3.14

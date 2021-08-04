@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash disable=SC1008
 
 ssmtp_conf_file=/etc/ssmtp/ssmtp.conf
 revaliases_file=/etc/ssmtp/revaliases
@@ -11,28 +12,28 @@ touch $revaliases_file
 
 echo FromLineOverride=YES >> $ssmtp_conf_file
 
-if [[ ! -z ${EMAIL_FROM} ]]; then
+if [[ -n ${EMAIL_FROM} ]]; then
     echo "root:$EMAIL_FROM" >> $revaliases_file
 fi
 
-if [[ ! -z ${EMAIL_USE_TLS} ]]; then
+if [[ -n ${EMAIL_USE_TLS} ]]; then
     echo UseSTARTTLS=YES >> $ssmtp_conf_file
     echo UseSSL=YES >> $ssmtp_conf_file
 fi
 
-if [[ ! -z ${EMAIL_SMTP_SERVER} ]]; then
-    if [[ ! -z ${EMAIL_SMTP_SERVER_PORT} ]]; then
+if [[ -n ${EMAIL_SMTP_SERVER} ]]; then
+    if [[ -n ${EMAIL_SMTP_SERVER_PORT} ]]; then
         echo "mailhub=$EMAIL_SMTP_SERVER:$EMAIL_SMTP_SERVER_PORT" >> $ssmtp_conf_file
     else
         echo "mailhub=$EMAIL_SMTP_SERVER" >> $ssmtp_conf_file
     fi
 fi
 
-if [[ ! -z ${EMAIL_SMTP_LOGIN} ]]; then
+if [[ -n ${EMAIL_SMTP_LOGIN} ]]; then
     echo "AuthUser=$EMAIL_SMTP_LOGIN" >> $ssmtp_conf_file
 fi
 
-if [[ ! -z ${EMAIL_SMTP_PASSWORD} ]]; then
+if [[ -n ${EMAIL_SMTP_PASSWORD} ]]; then
     echo "AuthPass=$EMAIL_SMTP_PASSWORD" >> $ssmtp_conf_file
 fi
 

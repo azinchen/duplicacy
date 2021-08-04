@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash disable=SC1008
 
-source "/app/common.sh"
+backup_pid_file=/var/run/duplicacy_backup.pid
+prune_pid_file=/var/run/duplicacy_prune.pid
 
 if [ -f ${backup_pid_file} ]; then
     echo Unfinished backup task found. Removing backup pid file, ${backup_pid_file}

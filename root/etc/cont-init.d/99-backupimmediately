@@ -1,15 +1,16 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash disable=SC1008
 
 exitcode=0
 
 if [[ $RUN_JOB_IMMEDIATELY == "yes" ]] || [[ $RUN_JOB_IMMEDIATELY == "YES" ]]; then
     if [[ "${BACKUP_CRON}" ]]; then
-        /app/backup.sh
+        backup.sh
         exitcode=$?
     fi
 
     if [[ "${PRUNE_CRON}" ]] && [[ $exitcode -eq 0 ]]; then
-        /app/prune.sh
+        prune.sh
         exitcode=$?
     fi
 fi

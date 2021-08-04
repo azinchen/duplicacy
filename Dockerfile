@@ -55,8 +55,7 @@ COPY --from=s6-builder /s6/ /rootfs/
 COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/bin/duplicacy
 COPY root/ /rootfs/
 
-RUN chmod +x /rootfs/app/* && \
-    chmod +x /rootfs/usr/bin/duplicacy
+RUN chmod +x /rootfs/usr/bin/*
 
 # Main image
 FROM alpine:3.14

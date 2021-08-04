@@ -48,10 +48,7 @@ RUN echo "**** install packages ****" && \
 # rootfs builder
 FROM alpine:3.14 AS rootfs-builder
 
-ARG TARGETPLATFORM
-
 RUN echo "**** create folders ****" && \
-    mkdir -p /rootfs && \
     mkdir -p /rootfs/usr/bin
 
 COPY --from=s6-builder /s6/ /rootfs/

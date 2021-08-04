@@ -109,7 +109,7 @@ else
 
         cd "$config_dir" || exit 128
 
-        nice -n "$PRIORITY_LEVEL" duplicacy "$GLOBAL_OPTIONS" backup "$BACKUP_OPTIONS" | tee -a "$log_file"
+        sh -c "nice -n $PRIORITY_LEVEL duplicacy $GLOBAL_OPTIONS backup $BACKUP_OPTIONS" | tee -a "$log_file"
         exitcode=${PIPESTATUS[0]}
 
         if [[ -n ${POST_BACKUP_SCRIPT} ]]; then

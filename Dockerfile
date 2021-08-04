@@ -5,9 +5,7 @@ ENV PACKAGE="just-containers/s6-overlay"
 ARG TARGETPLATFORM
 COPY /github_packages.json /tmp/github_packages.json
 
-RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress upgrade && \
-    echo "**** install packages ****" && \
+RUN echo "**** install packages ****" && \
     apk --no-cache --no-progress add tar=1.34-r0 \
                                      jq=1.6-r1 && \
     echo "**** create folders ****" && \
@@ -33,9 +31,7 @@ ENV PACKAGE="gilbertchen/duplicacy"
 ARG TARGETPLATFORM
 COPY /github_packages.json /tmp/github_packages.json
 
-RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress upgrade && \
-    echo "**** install packages ****" && \
+RUN echo "**** install packages ****" && \
     apk --no-cache --no-progress add jq=1.6-r1 && \
     echo "**** download ${PACKAGE} ****" && \
     PACKAGEPLATFORM=$(case ${TARGETPLATFORM} in \
@@ -60,9 +56,7 @@ ENV BACKUP_CRON="" \
     PRIORITY_LEVEL=10 \
     EMAIL_LOG_LINES_IN_BODY=10
 
-RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress upgrade && \
-    echo "**** install packages ****" && \
+RUN echo "**** install packages ****" && \
     apk --no-cache --no-progress add bash=5.1.4-r0 \
                                      zip=3.0-r9 \
                                      ssmtp=2.64-r14 \

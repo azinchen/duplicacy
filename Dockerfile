@@ -45,6 +45,22 @@ RUN echo "**** install packages ****" && \
     echo "Package ${PACKAGE} platform ${PACKAGEPLATFORM} version ${VERSION}" && \
     wget -q https://github.com/${PACKAGE}/releases/download/v${VERSION}/duplicacy_linux_${PACKAGEPLATFORM}_${VERSION} -qO /tmp/duplicacy
 
+# rootfs builder
+FROM alpine:3.14 AS rootfs-builder
+
+ARG TARGETPLATFORM
+
+RUN echo "**** create folders ****" && \
+    mkdir -p /rootfs && \
+    mkdir -p /rootfs/usr/bin
+
+COPY --from=s6-builder /s6/ /rootfs/
+COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/bin/duplicacy
+COPY root/ /rootfs/
+
+RUN chmod +x /rootfs/app/* && \
+    chmod +x /rootfs/usr/bin/duplicacy
+
 # Main image
 FROM alpine:3.14
 
@@ -69,12 +85,7 @@ RUN echo "**** install packages ****" && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/*
 
-COPY --from=s6-builder /s6/ /
-COPY --from=duplicacy-builder /tmp/duplicacy /usr/bin/duplicacy
-COPY root/ /
-
-RUN chmod +x /app/* && \
-    chmod +x /usr/bin/duplicacy
+COPY --from=rootfs-builder /rootfs/ /
 
 VOLUME ["/config"]
 VOLUME ["/data"]

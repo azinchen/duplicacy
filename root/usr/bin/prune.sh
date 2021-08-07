@@ -115,10 +115,10 @@ else
 fi
 
 if [ "$exitcode" -eq 0 ]; then
-    echo Prune COMPLETED, duration "$(converts "$duration")" | tee -a "$log_file"
+    echo Prune COMPLETED, duration "$(converts "$duration")" log size "$(wc -l < "$log_file")" lines | tee -a "$log_file"
     subject="duplicacy prune job id \"$hostname:$SNAPSHOT_ID\" COMPLETED"
 else
-    echo Prune FAILED, code "$exitcode", duration "$(converts "$duration")" | tee -a "$log_file"
+    echo Prune FAILED, code "$exitcode", duration "$(converts "$duration")" log size "$(wc -l < "$log_file")" lines | tee -a "$log_file"
     subject="duplicacy prune job id \"$hostname:$SNAPSHOT_ID\" FAILED"
 fi
 

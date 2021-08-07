@@ -129,10 +129,10 @@ else
 fi
 
 if [ "$exitcode" -eq 0 ]; then
-    echo Backup COMPLETED, duration "$(converts "$duration")" | tee -a "$log_file"
+    echo Backup COMPLETED, duration "$(converts "$duration")" log size "$(wc -l < "$log_file")" lines | tee -a "$log_file"
     subject="duplicacy backup job id \"$hostname:$SNAPSHOT_ID\" COMPLETED"
 else
-    echo Backup FAILED, code "$exitcode", duration "$(converts "$duration")" | tee -a "$log_file"
+    echo Backup FAILED, code "$exitcode", duration "$(converts "$duration")" log size "$(wc -l < "$log_file")" lines | tee -a "$log_file"
     subject="duplicacy backup job id \"$hostname:$SNAPSHOT_ID\" FAILED"
 fi
 

@@ -16,7 +16,7 @@ if [[ -n ${EMAIL_SMTP_SERVER} ]] && [[ -n ${EMAIL_TO} ]]; then
         echo "Content-Type: multipart/mixed; boundary=\"$boundary\""
         echo "Mime-Version: 1.0"
         echo ""
-        echo "${boundary}"
+        echo "--${boundary}"
         echo ""
     } >> "$mail_file"
 
@@ -37,14 +37,14 @@ if [[ -n ${EMAIL_SMTP_SERVER} ]] && [[ -n ${EMAIL_TO} ]]; then
 
     if [ $? ]; then
         {
-            echo "${boundary}"
+            echo "--${boundary}"
             echo "Content-Transfer-Encoding: base64"
             echo "Content-Type: application/zip; name=backuplog.zip"
             echo "Content-Disposition: attachment; filename=backuplog.zip"
             echo ""
             base64 "$zip_log_file"
             echo ""
-            echo "${boundary}"
+            echo "--${boundary}--"
         } >> "$mail_file"
     else
         echo "$zipout"

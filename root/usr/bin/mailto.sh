@@ -5,8 +5,8 @@ log_dir=$1
 subject=$2
 
 if [[ -n ${EMAIL_SMTP_SERVER} ]] && [[ -n ${EMAIL_TO} ]]; then
-    log_file=$log_dir/backup.log
-    mail_file=$log_dir/mailbody.log
+    log_file="$log_dir"/backup.log
+    mail_file="$log_dir"/mailbody.log
 
     boundary="_====_boundary_====_$(date +%Y%m%d%H%M%S)_====_"
 
@@ -16,7 +16,7 @@ if [[ -n ${EMAIL_SMTP_SERVER} ]] && [[ -n ${EMAIL_TO} ]]; then
         echo "Content-Type: multipart/mixed; boundary=\"$boundary\""
         echo "Mime-Version: 1.0"
         echo ""
-        echo "--${boundary}"
+        echo "${boundary}"
         echo ""
     } >> "$mail_file"
 
@@ -36,18 +36,18 @@ if [[ -n ${EMAIL_SMTP_SERVER} ]] && [[ -n ${EMAIL_TO} ]]; then
     zipout=$(zip -j "$zip_log_file" "$log_file")
 
     if [ $? ]; then
-        echo "$zipout"
-    else
         {
-            echo "--${boundary}"
+            echo "${boundary}"
             echo "Content-Transfer-Encoding: base64"
             echo "Content-Type: application/zip; name=backuplog.zip"
             echo "Content-Disposition: attachment; filename=backuplog.zip"
             echo ""
             base64 "$zip_log_file"
             echo ""
-            echo "--${boundary}--"
+            echo "${boundary}"
         } >> "$mail_file"
+    else
+        echo "$zipout"
     fi
 
     ssmtp -F "$EMAIL_FROM_NAME" "$EMAIL_TO" < "$mail_file"

@@ -5,11 +5,11 @@ ENV PACKAGE="just-containers/s6-overlay"
 ARG TARGETPLATFORM
 COPY /github_packages.json /tmp/github_packages.json
 
-RUN echo "**** install mandatory packages ****" && \
+RUN echo "**** upgrade packages ****" && \
+    apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
+    echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add tar=1.34-r0 \
         jq=1.6-r1 && \
-    echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
     echo "**** download ${PACKAGE} ****" && \
@@ -33,10 +33,10 @@ ENV PACKAGE="gilbertchen/duplicacy"
 ARG TARGETPLATFORM
 COPY /github_packages.json /tmp/github_packages.json
 
-RUN echo "**** install mandatory packages ****" && \
-    apk --no-cache --no-progress add jq=1.6-r1 && \
-    echo "**** upgrade packages ****" && \
+RUN echo "**** upgrade packages ****" && \
     apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
+    echo "**** install mandatory packages ****" && \
+    apk --no-cache --no-progress add jq=1.6-r1 && \
     echo "**** download ${PACKAGE} ****" && \
     PACKAGEPLATFORM=$(case ${TARGETPLATFORM} in \
         "linux/amd64")  echo "x64"    ;; \
@@ -71,14 +71,14 @@ ENV BACKUP_CRON="" \
     PRIORITY_LEVEL=10 \
     EMAIL_LOG_LINES_IN_BODY=10
 
-RUN echo "**** install mandatory packages ****" && \
+RUN echo "**** upgrade packages ****" && \
+    apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
+    echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add bash=5.1.4-r0 \
         zip=3.0-r9 \
         ssmtp=2.64-r14 \
         ca-certificates=20191127-r5 \
         docker=20.10.7-r1 && \
-    echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
     echo "**** create folders ****" && \
     mkdir -p /config && \
     mkdir -p /data && \

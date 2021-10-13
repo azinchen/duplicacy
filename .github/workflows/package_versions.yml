@@ -34,7 +34,6 @@ jobs:
           echo "Base branch=${BRANCH}, from_pr=${FROM_PR}"
 
       - name: Create package versions file if not exists
-        if: steps.branch.outputs.from_pr == 'false'
         shell: bash
         run: |
           if [[ ! -f "${{ env.CONFIG_FILE }}" ]]; then
@@ -43,7 +42,6 @@ jobs:
           fi
 
       - name: Create node if not exists
-        if: steps.branch.outputs.from_pr == 'false'
         shell: bash
         run: |
           NODE=$(jq '.[] | select(.name == "${{ matrix.repository }}").name' ${{ env.CONFIG_FILE }})
@@ -56,7 +54,6 @@ jobs:
           fi
 
       - name: Read config version
-        if: steps.branch.outputs.from_pr == 'false'
         id: config_version
         shell: bash
         run: |
@@ -65,7 +62,6 @@ jobs:
           echo "Config version=${VERSION}"
 
       - name: Read repository version
-        if: steps.branch.outputs.from_pr == 'false'
         id: repository_version
         shell: bash
         run: |
@@ -77,8 +73,7 @@ jobs:
           echo "Repository version=${VERSION}, branch=${BRANCH}"
 
       - name: Update ${{ env.CONFIG_FILE }}
-        if: (steps.config_version.outputs.version != steps.repository_version.outputs.version) &&
-            (steps.branch.outputs.from_pr == 'false')
+        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version }}
         shell: bash
         run: |
           TEMPFILENAME=$(tempfile -d .)
@@ -86,11 +81,9 @@ jobs:
           mv ${TEMPFILENAME} ${{ env.CONFIG_FILE }}
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
-        if: (steps.config_version.outputs.version != steps.repository_version.outputs.version) &&
-            (steps.branch.outputs.from_pr == 'false')
+        if: ${{ steps.config_version.outputs.version != steps.repository_version.outputs.version }}
         uses: peter-evans/create-pull-request@v3.10.1
         with:
-          token: ${{ secrets.DUPLICACY_REPO_PAT }}
           branch: ${{ steps.repository_version.outputs.branch }}
           commit-message: Bump ${{ matrix.repository }} from ${{ steps.config_version.outputs.version }} to ${{ steps.repository_version.outputs.version }}
           delete-branch: true

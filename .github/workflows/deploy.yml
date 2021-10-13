@@ -67,7 +67,7 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ steps.git.outputs.image_tag }}
 
       - name: Build and push ${{ github.repository }}:latest
-        if: steps.git.outputs.tag == 'true'
+        if: ${{ steps.git.outputs.tag == 'true' }}
         uses: docker/build-push-action@v2.7.0
         with:
           platforms: ${{ env.PLATFORMS }}
@@ -91,7 +91,7 @@ jobs:
           sarif_file: snyk.sarif
 
       - name: Update repo description
-        if: steps.git.outputs.tag == 'true'
+        if: ${{ steps.git.outputs.tag == 'true' }}
         uses: peter-evans/dockerhub-description@v2.4.3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}

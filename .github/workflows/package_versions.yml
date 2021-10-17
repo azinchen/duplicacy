@@ -1,7 +1,6 @@
 name: Update GitHub package versions
 
 on:
-  push:
   schedule:
     - cron: 0 */3 * * *
 

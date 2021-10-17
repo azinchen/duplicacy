@@ -33,7 +33,7 @@ jobs:
           TEMPFILENAME=$(tempfile -d .)
           ESCAPED_SEARCH=$(printf '%s\n' "${{ matrix.repository }}" | sed -e 's/[\/&]/\\&/g')
           sed '/.*${ESCAPED_SEARCH}.*/{n;s/.*/ENV PACKAGEVERSION=\"${{ steps.repository_version.outputs.version }}\"/}' < Dockerfile > ${TEMPFILENAME}
-          mv ${TEMPFILENAME} ${{ env.CONFIG_FILE }}
+          mv ${TEMPFILENAME} Dockerfile
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} to ${{ steps.repository_version.outputs.version }}
         uses: peter-evans/create-pull-request@v3.10.1

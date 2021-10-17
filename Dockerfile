@@ -28,7 +28,7 @@ RUN echo "**** upgrade packages ****" && \
 FROM alpine:3.14 AS duplicacy-builder
 
 ENV PACKAGE="gilbertchen/duplicacy"
-ENV PACKAGEVERSION="111"
+ENV PACKAGEVERSION="2.7.2"
 ARG TARGETPLATFORM
 
 RUN echo "**** upgrade packages ****" && \

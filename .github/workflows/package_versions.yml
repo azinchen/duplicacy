@@ -29,10 +29,8 @@ jobs:
       - name: Update Dockerfile
         shell: bash
         run: |
-          TEMPFILENAME=$(tempfile -d .)
           ESCAPED_SEARCH=$(printf '%s\n' "${{ matrix.repository }}" | sed -e 's/[\/&]/\\&/g')
-          sed "/.*${ESCAPED_SEARCH}.*/{n;s/.*/ENV PACKAGEVERSION=\"${{ steps.repository.outputs.version }}\"/}" < Dockerfile > ${TEMPFILENAME}
-          mv ${TEMPFILENAME} Dockerfile
+          sed -i "/.*${ESCAPED_SEARCH}.*/{n;s/.*/ENV PACKAGEVERSION=\"${{ steps.repository.outputs.version }}\"/}" Dockerfile
 
       - name: Create Pull Request, Bump ${{ matrix.repository }} to ${{ steps.repository.outputs.version }}
         uses: peter-evans/create-pull-request@v3.10.1

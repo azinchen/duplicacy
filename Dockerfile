@@ -59,15 +59,11 @@ ENV BACKUP_CRON="" \
     PRIORITY_LEVEL=10 \
     EMAIL_LOG_LINES_IN_BODY=10
 
-RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress add openssl=1.1.1l-r0 \
-        busybox=1.33.1-r6 \
-        containerd=1.5.8-r0 && \
-    echo "**** install mandatory packages ****" && \
-    apk --no-cache --no-progress add bash=5.1.4-r0 \
+RUN echo "**** install mandatory packages ****" && \
+    apk --no-cache --no-progress add bash=5.1.8-r0 \
         zip=3.0-r9 \
-        ssmtp=2.64-r14 \
-        ca-certificates=20191127-r5 \
+        ssmtp=2.64-r16 \
+        ca-certificates=20191127-r7 \
         docker=20.10.11-r0 && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

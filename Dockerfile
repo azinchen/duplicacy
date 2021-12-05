@@ -5,9 +5,7 @@ ENV PACKAGE="just-containers/s6-overlay"
 ENV PACKAGEVERSION="2.2.0.3"
 ARG TARGETPLATFORM
 
-RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
-    echo "**** install mandatory packages ****" && \
+RUN echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add tar=1.34-r0 && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
@@ -31,9 +29,7 @@ ENV PACKAGE="gilbertchen/duplicacy"
 ENV PACKAGEVERSION="2.7.2"
 ARG TARGETPLATFORM
 
-RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
-    echo "**** download ${PACKAGE} ****" && \
+RUN echo "**** download ${PACKAGE} ****" && \
     PACKAGEPLATFORM=$(case ${TARGETPLATFORM} in \
         "linux/amd64")  echo "x64"    ;; \
         "linux/386")    echo "i386"   ;; \
@@ -46,9 +42,6 @@ RUN echo "**** upgrade packages ****" && \
 
 # rootfs builder
 FROM alpine:3.14 AS rootfs-builder
-
-RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress add openssl=1.1.1l-r0
 
 COPY root/ /rootfs/
 COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/bin/duplicacy
@@ -67,7 +60,9 @@ ENV BACKUP_CRON="" \
     EMAIL_LOG_LINES_IN_BODY=10
 
 RUN echo "**** upgrade packages ****" && \
-    apk --no-cache --no-progress add openssl=1.1.1l-r0 && \
+    apk --no-cache --no-progress add openssl=1.1.1l-r0 \
+        busybox=1.33.1-r6 \
+        containerd=1.5.8-r0 && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add bash=5.1.4-r0 \
         zip=3.0-r9 \

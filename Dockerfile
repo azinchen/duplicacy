@@ -63,7 +63,7 @@ RUN echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add bash=5.1.8-r0 \
         zip=3.0-r9 \
         ssmtp=2.64-r16 \
-        ca-certificates=20191127-r7 \
+        ca-certificates=20211220-r0 \
         docker=20.10.11-r0 && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

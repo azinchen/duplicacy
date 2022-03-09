@@ -60,7 +60,7 @@ ENV BACKUP_CRON="" \
     EMAIL_LOG_LINES_IN_BODY=10
 
 RUN echo "**** install mandatory packages ****" && \
-    apk --no-cache --no-progress add bash=5.1.8-r0 \
+    apk --no-cache --no-progress add bash=5.1.16-r0 \
         zip=3.0-r9 \
         ssmtp=2.64-r16 \
         ca-certificates=20211220-r0 \

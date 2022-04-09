@@ -64,7 +64,7 @@ RUN echo "**** install mandatory packages ****" && \
         zip=3.0-r9 \
         ssmtp=2.64-r16 \
         ca-certificates=20211220-r0 \
-        docker=20.10.11-r0 && \
+        docker=20.10.14-r0 && \
     echo "**** create folders ****" && \
     mkdir -p /config && \
     mkdir -p /data && \

@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash disable=SC1008
+#!/command/with-contenv bash
 
 ssmtp_conf_file=/etc/ssmtp/ssmtp.conf
 revaliases_file=/etc/ssmtp/revaliases

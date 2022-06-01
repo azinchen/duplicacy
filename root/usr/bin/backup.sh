@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash disable=SC1008
+#!/command/with-contenv bash
 
 backup_pid_file=/var/run/duplicacy_backup.pid
 prune_pid_file=/var/run/duplicacy_prune.pid

@@ -1,5 +1,4 @@
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash disable=SC1008
+#!/command/with-contenv bash
 
 if [[ -f .duplicacy ]]; then
     echo "This folder has already been initialized with duplicacy. Not initializing again"

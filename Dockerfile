@@ -62,7 +62,9 @@ ENV BACKUP_CRON="" \
     EMAIL_LOG_LINES_IN_BODY=10 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=120000
 
-RUN echo "**** install mandatory packages ****" && \
+RUN echo "**** install security fixes ****" && \
+    apk --no-cache --no-progress add containerd=1.6.6-r0 && \
+    echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add bash=5.1.16-r2 \
         zip=3.0-r9 \
         ssmtp=2.64-r16 \

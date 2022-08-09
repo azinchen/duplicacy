@@ -1,5 +1,5 @@
 # s6 overlay builder
-FROM alpine:3.16.1 AS s6-builder
+FROM alpine:3.16.2 AS s6-builder
 
 ENV PACKAGE="just-containers/s6-overlay"
 ENV PACKAGEVERSION="3.1.1.2"
@@ -25,7 +25,7 @@ RUN echo "**** install mandatory packages ****" && \
     tar -C /s6/ -Jxpf /tmp/s6-overlay-binaries.tar.xz
 
 # Duplicacy builder
-FROM alpine:3.16.1 AS duplicacy-builder
+FROM alpine:3.16.2 AS duplicacy-builder
 
 ENV PACKAGE="gilbertchen/duplicacy"
 ENV PACKAGEVERSION="2.7.2"
@@ -43,7 +43,7 @@ RUN echo "**** download ${PACKAGE} ****" && \
     wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/duplicacy_linux_${PACKAGEPLATFORM}_${PACKAGEVERSION}" -qO /tmp/duplicacy
 
 # rootfs builder
-FROM alpine:3.16.1 AS rootfs-builder
+FROM alpine:3.16.2 AS rootfs-builder
 
 COPY root/ /rootfs/
 COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/bin/duplicacy
@@ -51,7 +51,7 @@ RUN chmod +x /rootfs/usr/bin/*
 COPY --from=s6-builder /s6/ /rootfs/
 
 # Main image
-FROM alpine:3.16.1
+FROM alpine:3.16.2
 
 LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 

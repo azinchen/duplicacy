@@ -36,7 +36,7 @@ RUN echo "**** install security fix packages ****" && \
 FROM alpine:3.16.2 AS duplicacy-builder
 
 ENV PACKAGE="gilbertchen/duplicacy"
-ENV PACKAGEVERSION="2.7.2"
+ENV PACKAGEVERSION="3.0.0"
 ARG TARGETPLATFORM
 
 RUN echo "**** install security fix packages ****" && \

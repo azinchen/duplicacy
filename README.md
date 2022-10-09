@@ -5,7 +5,7 @@
 [![Docker image size][dockerhub-size]][dockerhub-link]
 [![GitHub Last Commit][github-lastcommit]][github-link]
 
-`azinchen/duplicacy` is a Docker image to easily perform automated backups. It uses [Duplicacy][duplicacy-home] under the hood, and therefore supports:
+`azinchen/duplicacy` is a Docker image created to easily perform automated backups. It uses [Duplicacy][duplicacy-home] under the hood, and therefore supports:
 
 - Multiple storage backends: S3, Backblaze B2, Hubic, Dropbox, SFTP...
 - Client-side encryption
@@ -19,9 +19,9 @@
 
 The image supports multiple architectures such as `amd64`, `x86`, `arm/v6`, `arm/v7` and `arm64`.
 
-## Starting an Duplicacy instance
+## Starting a Duplicacy instance
 
-You can run the following command to stand up a standalone instance of Duplicacy on Docker:
+You can run the following command to launch a standalone instance of Duplicacy on Docker:
 
 ```bash
 docker run \
@@ -36,17 +36,17 @@ docker run \
 
 Container images are configured using environment variables passed at runtime.
 
-- `BACKUP_CRON`             - Set schedule for `duplicacy backup` command in format for crontab file. The `duplicacy backup` command doesn't run if `BACKUP_CRON` is not set.
-- `PRUNE_CRON`              - Set schedule for `duplicacy prune` command in format for crontab file. The `duplicacy prune` command doesn't run if `PRUNE_CRON` is not set.
-- `BACKUP_END_CRON`         - Set schedule for force killing of duplicacy backup process in format for crontab file. The force killing of duplicacy backup process doesn't run if `BACKUP_END_CRON` is not set.
+- `BACKUP_CRON`             - Set schedule for `duplicacy backup` command formatted for crontab file. The `duplicacy backup` command doesn't run if `BACKUP_CRON` is not set.
+- `PRUNE_CRON`              - Set schedule for `duplicacy prune` command formatted for crontab file. The `duplicacy prune` command doesn't run if `PRUNE_CRON` is not set.
+- `BACKUP_END_CRON`         - Set schedule for force killing of duplicacy backup process formatted for crontab file. The force killing of duplicacy backup process doesn't run if `BACKUP_END_CRON` is not set.
 - `PRIORITY_LEVEL`          - Run `duplicacy` with an adjusted niceness, which affects process scheduling. Niceness values range from -20 (most favorable to the process) to 19 (least favorable to the process). Default value is 10.
-- `GLOBAL_OPTIONS`          - Set global options for every `duplicacy` command, see ["Global options details"][duplicacy-global-options] for details. Global options are not set by default.
-- `BACKUP_OPTIONS`          - Set options for every `duplicacy backup` command, see `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default.
-- `PRE_BACKUP_SCRIPT`       - Give path of a custom script to run just before a backup starts. You could use docker command in pre script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
-- `POST_BACKUP_SCRIPT`      - Give path of a custom script to run once backup completes. You could use docker command in post script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
-- `PRUNE_OPTIONS`           - Set options for every `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Prune options are not set by default.
-- `POST_PRUNE_SCRIPT`       - Give path of a custom script to run once prune completes. You could use docker command in post script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
-- `RUN_JOB_IMMEDIATELY`     - Set to `yes` to run `duplicacy backup` and/or `duplicacy prune` command at container startup. Immeditely jobs don't start by default.
+- `GLOBAL_OPTIONS`          - Set global options for each `duplicacy` command, see ["Global options details"][duplicacy-global-options] for details. Global options are not set by default.
+- `BACKUP_OPTIONS`          - Set options for each `duplicacy backup` command, see `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default.
+- `PRE_BACKUP_SCRIPT`       - Given path of a custom script to run just before a backup starts. You could use docker command in pre script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
+- `POST_BACKUP_SCRIPT`      - Given path of a custom script to run once backup completes. You could use docker command in post script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
+- `PRUNE_OPTIONS`           - Set options for each `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Prune options are not set by default.
+- `POST_PRUNE_SCRIPT`       - Given path of a custom script to run once prune completes. You could use docker command in post script by adding `-v /var/run/docker.sock:/var/run/docker.sock`.
+- `RUN_JOB_IMMEDIATELY`     - Set to `yes` to run `duplicacy backup` and/or `duplicacy prune` command at container startup. The jobs don't start by default.
 - `SNAPSHOT_ID`             - Set snapshot id, see `duplicacy init` command [description][duplicacy-init] for details.
 - `STORAGE_URL`             - Set storage url, see `duplicacy init` command [description][duplicacy-init] for details. Duplicacy supports different storage providers, see ["Supported storage backends"][duplicacy-storage] for details. Login credentials for storage url should be set using environment variables, see ["Passwords, credentials and environment variables"][duplicacy-variables] for details.
 - `JOB_RANDOM_DELAY`        - Set maximum value of delay before job startup, in seconds. Jobs run without delay by default.
@@ -62,7 +62,7 @@ Container images are configured using environment variables passed at runtime.
 - `EMAIL_SMTP_SERVER_PORT`  - Set SMTP server port.
 - `EMAIL_SMTP_LOGIN`        - Set SMTP server login.
 - `EMAIL_SMTP_PASSWORD`     - Set SMTP server password.
-- `EMAIL_LOG_LINES_IN_BODY` - Set number of lines from the beginning and the end of log and put it to the body of email report. Default value is `10`.
+- `EMAIL_LOG_LINES_IN_BODY` - Set the number of lines from the beginning and from the end of the log and put it in the body of the email report. Default value is `10`.
 
 ## Disclaimer
 

@@ -93,7 +93,7 @@ RUN echo "**** install security fix packages ****" && \
         zip=3.0-r9 \
         ssmtp=2.64-r17 \
         ca-certificates=20220614-r0 \
-        docker=20.10.18-r0 \
+        docker=20.10.18-r1 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

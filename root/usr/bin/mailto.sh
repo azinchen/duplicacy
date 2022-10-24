@@ -2,8 +2,14 @@
 
 log_dir=$1
 subject=$2
+exitcode=$3
 
 if [[ -n ${EMAIL_SMTP_SERVER} ]] && [[ -n ${EMAIL_TO} ]]; then
+    if [[ ${SEND_REPORT_LEVEL} == "error" ]] && [[ "$exitcode" -eq 0 ]]; then
+        echo "Skip sending success report"
+        exit 0
+    fi
+
     log_file="$log_dir"/backup.log
     mail_file="$log_dir"/mailbody.log
 

@@ -135,6 +135,6 @@ else
     subject="duplicacy backup job id \"$hostname:$SNAPSHOT_ID\" FAILED"
 fi
 
-mailto.sh "$log_dir" "$subject"
+mailto.sh "$log_dir" "$subject" "$exitcode"
 
 exit "$exitcode"

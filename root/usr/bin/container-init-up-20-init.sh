@@ -1,5 +1,8 @@
 #!/command/with-contenv bash
 
+config_dir=/config
+cd "$config_dir" || exit 128
+
 if [[ -f .duplicacy ]]; then
     echo "This folder has already been initialized with duplicacy. Not initializing again"
     exit 0

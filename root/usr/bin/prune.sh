@@ -97,7 +97,7 @@ else
         command="$command -keep $policy"
     done
 
-    sh -c "nice -n $PRIORITY_LEVEL duplicacy $GLOBAL_OPTIONS prune $command" | tee -a "$log_file"
+    sh -c "duplicacy $GLOBAL_OPTIONS prune $command" | tee -a "$log_file"
     exitcode=${PIPESTATUS[0]}
 
     if [[ -n ${POST_PRUNE_SCRIPT} ]];  then

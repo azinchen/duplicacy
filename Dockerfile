@@ -77,7 +77,6 @@ LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 ENV BACKUP_CRON="" \
     SNAPSHOT_ID="" \
     STORAGE_URL="" \
-    PRIORITY_LEVEL=10 \
     EMAIL_LOG_LINES_IN_BODY=10 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=120000
 

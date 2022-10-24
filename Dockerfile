@@ -78,6 +78,7 @@ ENV BACKUP_CRON="" \
     SNAPSHOT_ID="" \
     STORAGE_URL="" \
     EMAIL_LOG_LINES_IN_BODY=10 \
+    SEND_REPORT_LEVEL="all" \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=120000
 
 RUN echo "**** install security fix packages ****" && \

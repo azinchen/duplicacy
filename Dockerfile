@@ -90,6 +90,7 @@ RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
         bash=5.1.16-r2 \
+        tzdata=2022c-r0 \
         zip=3.0-r9 \
         ssmtp=2.64-r17 \
         ca-certificates=20220614-r0 \

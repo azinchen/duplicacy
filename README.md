@@ -63,6 +63,8 @@ Container images are configured using environment variables passed at runtime.
 - `EMAIL_SMTP_PASSWORD`     - Set SMTP server password.
 - `EMAIL_LOG_LINES_IN_BODY` - Set the number of lines from the beginning and from the end of the log and put it in the body of the email report. Default value is `10`.
 - `SEND_REPORT_LEVEL`       - Send email reports with level lower than defined. Possible values are `all` or `error`. Default value is `all`.
+- `TZ`                      - Set time zone and daylight-saving time data. Possible values can be found [here](https://docs.trifacta.com/display/DP/Supported+Time+Zone+Values). Default value is `UTC`.
+
 
 ## Disclaimer
 

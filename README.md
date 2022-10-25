@@ -63,7 +63,7 @@ Container images are configured using environment variables passed at runtime.
 - `EMAIL_SMTP_PASSWORD`     - Set SMTP server password.
 - `EMAIL_LOG_LINES_IN_BODY` - Set the number of lines from the beginning and from the end of the log and put it in the body of the email report. Default value is `10`.
 - `SEND_REPORT_LEVEL`       - Send email reports with level lower than defined. Possible values are `all` or `error`. Default value is `all`.
-- `TZ`                      - Set time zone and daylight-saving time data. Possible values can be found [here](https://docs.trifacta.com/display/DP/Supported+Time+Zone+Values). Default value is `UTC`.
+- `TZ`                      - Set time zone and daylight-saving time data. Possible values can be found [here][tz-database]. Default value is `UTC`.
 
 
 ## Disclaimer
@@ -93,4 +93,5 @@ If you have any problems with or questions about this image, please contact me t
 [duplicacy-prune]: https://forum.duplicacy.com/t/prune-command-details/1005
 [duplicacy-filters]: https://forum.duplicacy.com/t/filters-include-exclude-patterns/1089
 [duplicacy-variables]: https://forum.duplicacy.com/t/passwords-credentials-and-environment-variables/1094
+[tz-database]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 [email-link]: mailto:alexander@zinchenko.com

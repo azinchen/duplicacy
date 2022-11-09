@@ -8,7 +8,7 @@ ARG TARGETPLATFORM
 RUN echo "**** install security fix packages ****" && \
     apk --no-cache --no-progress add \
         zlib=1.2.12-r3 \
-        openssl=1.1.1q-r0 \
+        openssl=1.1.1s-r0 \
         busybox=1.35.0-r17 \
         && \
     echo "**** install mandatory packages ****" && \
@@ -42,7 +42,7 @@ ARG TARGETPLATFORM
 RUN echo "**** install security fix packages ****" && \
     apk --no-cache --no-progress add \
         zlib=1.2.12-r3 \
-        openssl=1.1.1q-r0 \
+        openssl=1.1.1s-r0 \
         busybox=1.35.0-r17 \
         && \
     echo "**** download ${PACKAGE} ****" && \
@@ -61,7 +61,7 @@ FROM alpine:3.16.2 AS rootfs-builder
 
 RUN echo "**** install security fix packages ****" && \
     apk --no-cache --no-progress add zlib=1.2.12-r3 \
-        openssl=1.1.1q-r0 \
+        openssl=1.1.1s-r0 \
         busybox=1.35.0-r17
 
 COPY root/ /rootfs/
@@ -84,13 +84,13 @@ ENV BACKUP_CRON="" \
 RUN echo "**** install security fix packages ****" && \
     apk --no-cache --no-progress add \
         zlib=1.2.12-r3 \
-        openssl=1.1.1q-r0 \
+        openssl=1.1.1s-r0 \
         busybox=1.35.0-r17 \
         && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
         bash=5.1.16-r2 \
-        tzdata=2022c-r0 \
+        tzdata=2022f-r1 \
         zip=3.0-r9 \
         ssmtp=2.64-r17 \
         ca-certificates=20220614-r0 \

@@ -1,5 +1,5 @@
 # s6 overlay builder
-FROM alpine:3.16.3 AS s6-builder
+FROM alpine:3.17.0 AS s6-builder
 
 ENV PACKAGE="just-containers/s6-overlay"
 ENV PACKAGEVERSION="3.1.2.1"
@@ -8,8 +8,8 @@ ARG TARGETPLATFORM
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        tar=1.34-r0 \
-        xz=5.2.5-r1 \
+        tar=1.34-r1 \
+        xz=5.2.8-r0 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
@@ -28,7 +28,7 @@ RUN echo "**** install security fix packages ****" && \
     tar -C /s6/ -Jxpf /tmp/s6-overlay-binaries.tar.xz
 
 # Duplicacy builder
-FROM alpine:3.16.3 AS duplicacy-builder
+FROM alpine:3.17.0 AS duplicacy-builder
 
 ENV PACKAGE="gilbertchen/duplicacy"
 ENV PACKAGEVERSION="3.0.1"
@@ -47,7 +47,7 @@ RUN echo "**** install security fix packages ****" && \
     wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/duplicacy_linux_${PACKAGEPLATFORM}_${PACKAGEVERSION}" -qO /tmp/duplicacy
 
 # rootfs builder
-FROM alpine:3.16.3 AS rootfs-builder
+FROM alpine:3.17.0 AS rootfs-builder
 
 RUN echo "**** install security fix packages ****" && \
     echo "**** end run statement ****"
@@ -58,7 +58,7 @@ RUN chmod +x /rootfs/usr/bin/*
 COPY --from=s6-builder /s6/ /rootfs/
 
 # Main image
-FROM alpine:3.16.3
+FROM alpine:3.17.0
 
 LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 
@@ -72,12 +72,12 @@ ENV BACKUP_CRON="" \
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        bash=5.1.16-r2 \
+        bash=5.2.9-r0 \
         tzdata=2022f-r1 \
-        zip=3.0-r9 \
-        ssmtp=2.64-r17 \
-        ca-certificates=20220614-r0 \
-        docker-cli=20.10.20-r0 \
+        zip=3.0-r10 \
+        ssmtp=2.64-r18 \
+        ca-certificates=20220614-r2 \
+        docker-cli=20.10.21-r1 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

@@ -9,7 +9,7 @@ RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
         tar=1.34-r1 \
-        xz=5.2.8-r0 \
+        xz=5.2.9-r0 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
@@ -72,7 +72,7 @@ ENV BACKUP_CRON="" \
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        bash=5.2.9-r0 \
+        bash=5.2.12-r0 \
         tzdata=2022f-r1 \
         zip=3.0-r10 \
         ssmtp=2.64-r18 \

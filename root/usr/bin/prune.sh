@@ -38,12 +38,12 @@ operation_in_progress()
     # Expect the name of the operation as the first parameter
     operation=${1}
 
-    if [ -f "${backup_pid_file}" ]; then
+    if [ -f "${backup_pid_file}" ] && [ ! -z "$(cat ${backup_pid_file})" -a -e /proc/$(cat ${backup_pid_file}) ]; then
         echo A backup is in progress with PID="$(cat "${backup_pid_file}")". Skipping "${operation}" | tee -a "$log_file"
         return 0
     fi
 
-    if [ -f "${prune_pid_file}" ]; then
+    if [ -f "${prune_pid_file}" ] && [ ! -z "$(cat ${prune_pid_file})" -a -e /proc/$(cat ${prune_pid_file}) ]; then
         echo A prune is in progress with PID="$(cat "${prune_pid_file}")". Skipping "${operation}" | tee -a "$log_file"
         return 0
     fi

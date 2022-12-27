@@ -2,7 +2,7 @@
 
 [![Docker pulls][dockerhub-pulls]][dockerhub-link]
 [![Docker image size][dockerhub-size]][dockerhub-link]
-[![GitHub build][github-releasedate]][github-link]
+[![GitHub release date][github-releasedate]][github-link]
 [![GitHub build][github-build]][github-link]
 [![GitHub last commit][github-lastcommit]][github-link]
 

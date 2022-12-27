@@ -1,9 +1,10 @@
 # Duplicacy
 
-[![Docker Pulls][dockerhub-pulls]][dockerhub-link]
-[![GitHub build][github-build]][github-link]
+[![Docker pulls][dockerhub-pulls]][dockerhub-link]
 [![Docker image size][dockerhub-size]][dockerhub-link]
-[![GitHub Last Commit][github-lastcommit]][github-link]
+[![GitHub build][github-build]][github-link]
+[![GitHub build][github-releasedate]][github-link]
+[![GitHub last commit][github-lastcommit]][github-link]
 
 `azinchen/duplicacy` is a Docker image created to easily perform automated backups. It uses [Duplicacy][duplicacy-home] under the hood, and therefore supports:
 
@@ -77,7 +78,8 @@ If you have any problems with or questions about this image, please contact me t
 [github-lastcommit]: https://img.shields.io/github/last-commit/azinchen/duplicacy
 [github-link]: https://github.com/azinchen/duplicacy
 [github-issues]: https://github.com/azinchen/duplicacy/issues
-[github-build]: https://img.shields.io/github/workflow/status/azinchen/duplicacy/CI_CD_Task
+[github-build]: https://img.shields.io/github/actions/workflow/status/azinchen/nordvpn/deploy.yml?branch=master
+[github-releasedate]: https://img.shields.io/github/release-date/azinchen/nordvpn
 [duplicacy-home]: https://duplicacy.com
 [duplicacy-github]: https://github.com/gilbertchen/duplicacy
 [duplicacy-license]: https://github.com/gilbertchen/duplicacy/blob/master/LICENSE.md

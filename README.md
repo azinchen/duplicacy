@@ -2,8 +2,8 @@
 
 [![Docker pulls][dockerhub-pulls]][dockerhub-link]
 [![Docker image size][dockerhub-size]][dockerhub-link]
-[![GitHub build][github-build]][github-link]
 [![GitHub build][github-releasedate]][github-link]
+[![GitHub build][github-build]][github-link]
 [![GitHub last commit][github-lastcommit]][github-link]
 
 `azinchen/duplicacy` is a Docker image created to easily perform automated backups. It uses [Duplicacy][duplicacy-home] under the hood, and therefore supports:

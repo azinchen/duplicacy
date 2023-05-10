@@ -8,8 +8,8 @@ ARG TARGETPLATFORM
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        tar=1.34-r2 \
-        xz=5.2.9-r0 \
+        tar=1.34-r3 \
+        xz=5.4.3-r0 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
@@ -72,12 +72,12 @@ ENV BACKUP_CRON="" \
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        bash=5.2.15-r0 \
-        tzdata=2023c-r0 \
-        zip=3.0-r10 \
-        ssmtp=2.64-r18 \
+        bash=5.2.15-r3 \
+        tzdata=2023c-r1 \
+        zip=3.0-r12 \
+        ssmtp=2.64-r20 \
         ca-certificates=20230506-r0 \
-        docker-cli=20.10.24-r2 \
+        docker-cli=23.0.6-r1 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

@@ -72,12 +72,12 @@ ENV BACKUP_CRON="" \
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        bash=5.2.15-r3 \
+        bash=5.2.15-r5 \
         tzdata=2023c-r1 \
         zip=3.0-r12 \
         ssmtp=2.64-r20 \
         ca-certificates=20230506-r0 \
-        docker-cli=23.0.6-r1 \
+        docker-cli=23.0.6-r2 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

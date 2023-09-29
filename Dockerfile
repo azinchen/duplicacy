@@ -1,5 +1,5 @@
 # s6 overlay builder
-FROM alpine:3.18.3 AS s6-builder
+FROM alpine:3.18.4 AS s6-builder
 
 ENV PACKAGE="just-containers/s6-overlay"
 ENV PACKAGEVERSION="3.1.5.0"
@@ -28,7 +28,7 @@ RUN echo "**** install security fix packages ****" && \
     tar -C /s6/ -Jxpf /tmp/s6-overlay-binaries.tar.xz
 
 # Duplicacy builder
-FROM alpine:3.18.3 AS duplicacy-builder
+FROM alpine:3.18.4 AS duplicacy-builder
 
 ENV PACKAGE="gilbertchen/duplicacy"
 ENV PACKAGEVERSION="3.2.0"
@@ -47,7 +47,7 @@ RUN echo "**** install security fix packages ****" && \
     wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/duplicacy_linux_${PACKAGEPLATFORM}_${PACKAGEVERSION}" -qO /tmp/duplicacy
 
 # rootfs builder
-FROM alpine:3.18.3 AS rootfs-builder
+FROM alpine:3.18.4 AS rootfs-builder
 
 RUN echo "**** install security fix packages ****" && \
     echo "**** end run statement ****"
@@ -58,7 +58,7 @@ RUN chmod +x /rootfs/usr/bin/*
 COPY --from=s6-builder /s6/ /rootfs/
 
 # Main image
-FROM alpine:3.18.3
+FROM alpine:3.18.4
 
 LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 

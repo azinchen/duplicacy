@@ -9,7 +9,7 @@ RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
         tar=1.35-r2 \
-        xz=5.4.5-r0 \
+        xz=5.6.1-r3 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
@@ -72,12 +72,12 @@ ENV BACKUP_CRON="" \
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        bash=5.2.21-r0 \
-        tzdata=2024a-r0 \
+        bash=5.2.26-r0 \
+        tzdata=2024a-r1 \
         zip=3.0-r12 \
-        ssmtp=2.64-r20 \
+        ssmtp=2.64-r22 \
         ca-certificates=20240226-r0 \
-        docker-cli=25.0.5-r0 \
+        docker-cli=26.1.3-r1 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

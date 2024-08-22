@@ -9,7 +9,7 @@ RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
         tar=1.35-r2 \
-        xz=5.6.1-r3 \
+        xz=5.6.2-r0 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
@@ -77,7 +77,7 @@ RUN echo "**** install security fix packages ****" && \
         zip=3.0-r12 \
         ssmtp=2.64-r22 \
         ca-certificates=20240705-r0 \
-        docker-cli=26.1.3-r2 \
+        docker-cli=26.1.5-r0 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

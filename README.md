@@ -14,7 +14,7 @@
 - Multi-versioning
 - ... and more generally, all the features that duplicacy has.
 
-`azinchen/duplicacy` uses [Duplicacy Command Line version][duplicacy-github] `3.2.3`.
+`azinchen/duplicacy` uses [Duplicacy Command Line version][duplicacy-github] `3.2.4`.
 
 ## Supported Architectures
 

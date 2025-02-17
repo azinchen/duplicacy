@@ -1,28 +1,28 @@
 # Duplicacy
 
-[![Docker pulls][dockerhub-pulls]][dockerhub-link]
-[![Docker image size][dockerhub-size]][dockerhub-link]
-[![GitHub release date][github-releasedate]][github-link]
-[![GitHub build][github-build]][github-link]
+[![Docker pulls][dockerhub-pulls]][dockerhub-link]  
+[![Docker image size][dockerhub-size]][dockerhub-link]  
+[![GitHub release date][github-releasedate]][github-link]  
+[![GitHub build][github-build]][github-link]  
 [![GitHub last commit][github-lastcommit]][github-link]
 
-`azinchen/duplicacy` is a Docker image created to easily perform automated backups. It uses [Duplicacy][duplicacy-home] under the hood, and therefore supports:
+The Docker image `azinchen/duplicacy` is designed for automated backups by leveraging [Duplicacy][duplicacy-home]. As such, it supports:
 
-- Multiple storage backends: S3, Backblaze B2, Hubic, Dropbox, SFTP...
+- A wide range of storage backends (S3, Backblaze B2, Hubic, Dropbox, SFTP, and more)
 - Client-side encryption
 - Deduplication
 - Multi-versioning
-- ... and more generally, all the features that duplicacy has.
+- And all the other features available in Duplicacy
 
-`azinchen/duplicacy` uses [Duplicacy Command Line version][duplicacy-github] `3.2.4`.
+This image uses the [Duplicacy Command Line version][duplicacy-github] `3.2.4`.
 
 ## Supported Architectures
 
-The image supports multiple architectures such as `amd64`, `x86`, `arm/v6`, `arm/v7` and `arm64`.
+The image is compatible with several architectures including `amd64`, `x86`, `arm/v6`, `arm/v7`, and `arm64`.
 
-## Starting a Duplicacy instance
+## Running a Duplicacy Container
 
-You can run the following command to launch a standalone instance of Duplicacy on Docker:
+To start a standalone Duplicacy instance in Docker, you can run:
 
 ```bash
 docker run \
@@ -33,64 +33,78 @@ docker run \
   azinchen/duplicacy
 ```
 
-## Environment variables
+## Configuring Environment Variables
 
-Container images are configured using environment variables passed at runtime.
-| Parameter | Function |
-| :----: | --- |
-| `BACKUP_CRON` | Set schedule for `duplicacy backup` command formatted for crontab file. The `duplicacy backup` command doesn't run if `BACKUP_CRON` is not set. |
-| `PRUNE_CRON` | Set schedule for `duplicacy prune` command formatted for crontab file. The `duplicacy prune` command doesn't run if `PRUNE_CRON` is not set. |
-| `BACKUP_END_CRON` | Set schedule for force killing of duplicacy backup process formatted for crontab file. The force killing of duplicacy backup process doesn't run if `BACKUP_END_CRON` is not set. |
-| `GLOBAL_OPTIONS` | Set global options for each `duplicacy` command, see ["Global options details"][duplicacy-global-options] for details. Global options are not set by default. |
-| `BACKUP_OPTIONS` | Set options for each `duplicacy backup` command, see `duplicacy backup` command [description][duplicacy-backup] for details. Backup options are not set by default. |
-| `PRUNE_OPTIONS` | Set options for each `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Prune options are not set by default. |
-| `RUN_JOB_IMMEDIATELY` | Set to `yes` to run `duplicacy backup` and/or `duplicacy prune` command at container startup. The jobs don't start by default. |
-| `SNAPSHOT_ID` | Set snapshot id, see `duplicacy init` command [description][duplicacy-init] for details. |
-| `STORAGE_URL` | Set storage url, see `duplicacy init` command [description][duplicacy-init] for details. Duplicacy supports different storage providers, see ["Supported storage backends"][duplicacy-storage] for details. Login credentials for storage url should be set using environment variables, see ["Passwords, credentials and environment variables"][duplicacy-variables] for details. |
-| `JOB_RANDOM_DELAY` | Set maximum value of delay before job startup, in seconds. Jobs run without delay by default. |
-| `PRUNE_KEEP_POLICIES` | Set keep options for `duplicacy prune` command, see `duplicacy prune` command [description][duplicacy-prune] for details. Several keep options can be set using semicolon as delimeter. |
-| `FILTER_PATTERNS` | Set filter patterns, see ["Filters/Include exclude patterns"][duplicacy-filters] for details. Several filter patterns can be defined using semicolon as delimeter. |
-| `DUPLICACY_PASSWORD` | Enable encryption for storage and set password, see `duplicacy init` command [description][duplicacy-init] for details. Encryption is disabled by default. |
-| `EMAIL_HOSTNAME_ALIAS` | Set host alias in email reports. Hostname of container is used by default. |
-| `EMAIL_FROM` | Set sender email. |
-| `EMAIL_FROM_NAME` | Set sender name. |
-| `EMAIL_TO` | Set recipient email. |
-| `EMAIL_USE_TLS` | Enable encryption in session with SMTP server. |
-| `EMAIL_SMTP_SERVER` | Set SMTP server address. |
-| `EMAIL_SMTP_SERVER_PORT` | Set SMTP server port. |
-| `EMAIL_SMTP_LOGIN` | Set SMTP server login. |
-| `EMAIL_SMTP_PASSWORD` | Set SMTP server password. |
-| `EMAIL_LOG_LINES_IN_BODY` | Set the number of lines from the beginning and from the end of the log and put it in the body of the email report. Default value is `10`. |
-| `SEND_REPORT_LEVEL` | Send email reports with level lower than defined. Possible values are `all` or `error`. Default value is `all`. |
-| `TZ` | Set time zone and daylight-saving time data. Possible values can be found [here][tz-database]. Default value is `UTC`. |
+The container is configured at runtime using environment variables. Below are the available settings:
+
+### Backup Settings
+
+- **`BACKUP_CRON`**: Specifies the schedule (in crontab format) for running the `duplicacy backup` command. Without this variable, the backup command will not execute.
+- **`BACKUP_OPTIONS`**: Defines additional options for the `duplicacy backup` command. For details, see the [duplicacy backup documentation][duplicacy-backup]. Defaults are not applied.
+- **`BACKUP_END_CRON`**: Sets a schedule (in crontab format) for forcefully terminating the duplicacy backup process. If not set, no force kill is performed.
+
+### Prune Settings
+
+- **`PRUNE_CRON`**: Specifies the schedule (in crontab format) for executing the `duplicacy prune` command. This command runs only if the variable is set.
+- **`PRUNE_OPTIONS`**: Provides extra options for the `duplicacy prune` command. Refer to the [duplicacy prune documentation][duplicacy-prune] for more details. Defaults are not applied.
+- **`PRUNE_KEEP_POLICIES`**: Sets the retention policies for pruning. Multiple policies can be specified by separating them with semicolons. For more details, see [duplicacy prune documentation][duplicacy-prune].
+
+### General Settings
+
+- **`GLOBAL_OPTIONS`**: Specifies global options for any `duplicacy` command. Check out the [global options details][duplicacy-global-options] for more information. No defaults are set.
+- **`RUN_JOB_IMMEDIATELY`**: When set to `yes`, the container will execute the `duplicacy backup` and/or `duplicacy prune` commands immediately upon startup. By default, jobs do not run immediately.
+- **`SNAPSHOT_ID`**: Provides the snapshot identifier as described in the `duplicacy init` command documentation [here][duplicacy-init].
+- **`STORAGE_URL`**: Indicates the storage location URL, as required by the `duplicacy init` command [documentation][duplicacy-init]. Duplicacy supports various storage providers; see the [supported storage backends][duplicacy-storage] for details. Login credentials for the storage should be set via environment variables as outlined in the [credentials documentation][duplicacy-variables].
+- **`JOB_RANDOM_DELAY`**: Sets a maximum delay (in seconds) before starting a job. By default, jobs start without delay.
+- **`FILTER_PATTERNS`**: Defines include/exclude patterns for filtering. Multiple patterns can be separated by semicolons. For more details, refer to the [filter documentation][duplicacy-filters].
+- **`DUPLICACY_PASSWORD`**: When provided, enables encryption for storage by setting the encryption password. See the `duplicacy init` command details [here][duplicacy-init]. Encryption is off by default.
+
+### Email Settings
+
+- **`EMAIL_HOSTNAME_ALIAS`**: Overrides the container's hostname in email reports.
+- **`EMAIL_FROM`**: Sets the sender's email address.
+- **`EMAIL_FROM_NAME`**: Sets the sender's name.
+- **`EMAIL_TO`**: Specifies the recipient's email address.
+- **`EMAIL_USE_TLS`**: Enables TLS encryption for the SMTP session.
+- **`EMAIL_SMTP_SERVER`**: Specifies the SMTP server address.
+- **`EMAIL_SMTP_SERVER_PORT`**: Defines the port for the SMTP server.
+- **`EMAIL_SMTP_LOGIN`**: Provides the SMTP server login.
+- **`EMAIL_SMTP_PASSWORD`**: Provides the SMTP server password.
+- **`EMAIL_LOG_LINES_IN_BODY`**: Determines the number of lines from the start and end of the log to include in the email report. The default is `10`.
+- **`SEND_REPORT_LEVEL`**: Sets the minimum level of logs to trigger email reports. Options are `all` or `error` (default is `all`).
+
+### Time Zone Settings
+
+- **`TZ`**: Sets the container's time zone. Acceptable values can be found [here][tz-database]. The default is `UTC`.
 
 ## Disclaimer
 
-This project uses [Duplicacy Command Line version][duplicacy-github], which is free for personal use but requires [purchasing a licence][duplicacy-purchase] for non-trial commercial use. See the detailed terms [here][duplicacy-license].
+This project utilizes the [Duplicacy Command Line version][duplicacy-github], which is free for personal use. Commercial use requires a [license purchase][duplicacy-purchase]. For complete licensing terms, see [here][duplicacy-license].
 
-## Issues
+## Reporting Issues
 
-If you have any problems with or questions about this image, please contact me through a [GitHub issue][github-issues] or [email][email-link].
+If you encounter any problems or have questions about this image, please open a [GitHub issue][github-issues] or contact via [email][email-link].
 
-[dockerhub-pulls]: https://img.shields.io/docker/pulls/azinchen/duplicacy
-[dockerhub-link]: https://hub.docker.com/repository/docker/azinchen/duplicacy
-[dockerhub-size]: https://img.shields.io/docker/image-size/azinchen/duplicacy/latest
-[github-lastcommit]: https://img.shields.io/github/last-commit/azinchen/duplicacy
-[github-link]: https://github.com/azinchen/duplicacy
-[github-issues]: https://github.com/azinchen/duplicacy/issues
-[github-build]: https://img.shields.io/github/actions/workflow/status/azinchen/nordvpn/deploy.yml?branch=master
-[github-releasedate]: https://img.shields.io/github/release-date/azinchen/nordvpn
-[duplicacy-home]: https://duplicacy.com
-[duplicacy-github]: https://github.com/gilbertchen/duplicacy
-[duplicacy-license]: https://github.com/gilbertchen/duplicacy/blob/master/LICENSE.md
-[duplicacy-purchase]: https://duplicacy.com/buy.html
-[duplicacy-forum]: https://forum.duplicacy.com
-[duplicacy-storage]: https://forum.duplicacy.com/t/supported-storage-backends/1107
-[duplicacy-global-options]: https://forum.duplicacy.com/t/global-options-details/1087
-[duplicacy-init]: https://forum.duplicacy.com/t/init-command-details/1090
-[duplicacy-backup]: https://forum.duplicacy.com/t/backup-command-details/1077
-[duplicacy-prune]: https://forum.duplicacy.com/t/prune-command-details/1005
-[duplicacy-filters]: https://forum.duplicacy.com/t/filters-include-exclude-patterns/1089
-[duplicacy-variables]: https://forum.duplicacy.com/t/passwords-credentials-and-environment-variables/1094
-[tz-database]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+---
+
+[dockerhub-pulls]: https://img.shields.io/docker/pulls/azinchen/duplicacy  
+[dockerhub-link]: https://hub.docker.com/repository/docker/azinchen/duplicacy  
+[dockerhub-size]: https://img.shields.io/docker/image-size/azinchen/duplicacy/latest  
+[github-lastcommit]: https://img.shields.io/github/last-commit/azinchen/duplicacy  
+[github-link]: https://github.com/azinchen/duplicacy  
+[github-issues]: https://github.com/azinchen/duplicacy/issues  
+[github-build]: https://img.shields.io/github/actions/workflow/status/azinchen/nordvpn/deploy.yml?branch=master  
+[github-releasedate]: https://img.shields.io/github/release-date/azinchen/nordvpn  
+[duplicacy-home]: https://duplicacy.com  
+[duplicacy-github]: https://github.com/gilbertchen/duplicacy  
+[duplicacy-license]: https://github.com/gilbertchen/duplicacy/blob/master/LICENSE.md  
+[duplicacy-purchase]: https://duplicacy.com/buy.html  
+[duplicacy-storage]: https://forum.duplicacy.com/t/supported-storage-backends/1107  
+[duplicacy-global-options]: https://forum.duplicacy.com/t/global-options-details/1087  
+[duplicacy-init]: https://forum.duplicacy.com/t/init-command-details/1090  
+[duplicacy-backup]: https://forum.duplicacy.com/t/backup-command-details/1077  
+[duplicacy-prune]: https://forum.duplicacy.com/t/prune-command-details/1005  
+[duplicacy-filters]: https://forum.duplicacy.com/t/filters-include-exclude-patterns/1089  
+[duplicacy-variables]: https://forum.duplicacy.com/t/passwords-credentials-and-environment-variables/1094  
+[tz-database]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones  
 [email-link]: mailto:alexander@zinchenko.com

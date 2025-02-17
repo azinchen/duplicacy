@@ -9,17 +9,17 @@ RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
         tar=1.35-r2 \
-        xz=5.6.2-r0 \
+        xz=5.6.3-r0 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
     echo "**** download ${PACKAGE} ****" && \
     PACKAGEPLATFORM=$(case ${TARGETPLATFORM} in \
-        "linux/amd64")    echo "x86_64"   ;; \
         "linux/386")      echo "i486"     ;; \
-        "linux/arm64")    echo "aarch64"  ;; \
-        "linux/arm/v7")   echo "armhf"    ;; \
+        "linux/amd64")    echo "x86_64"   ;; \
         "linux/arm/v6")   echo "arm"      ;; \
+        "linux/arm/v7")   echo "armhf"    ;; \
+        "linux/arm64")    echo "aarch64"  ;; \
         *)                echo ""         ;; esac) && \
     echo "Package ${PACKAGE} platform ${PACKAGEPLATFORM} version ${PACKAGEVERSION}" && \
     wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/s6-overlay-noarch.tar.xz" -qO /tmp/s6-overlay-noarch.tar.xz && \
@@ -37,11 +37,11 @@ ARG TARGETPLATFORM
 RUN echo "**** install security fix packages ****" && \
     echo "**** download ${PACKAGE} ****" && \
     PACKAGEPLATFORM=$(case ${TARGETPLATFORM} in \
-        "linux/amd64")  echo "x64"    ;; \
         "linux/386")    echo "i386"   ;; \
-        "linux/arm64")  echo "arm64"  ;; \
-        "linux/arm/v7") echo "arm"    ;; \
+        "linux/amd64")  echo "x64"    ;; \
         "linux/arm/v6") echo "arm"    ;; \
+        "linux/arm/v7") echo "arm"    ;; \
+        "linux/arm64")  echo "arm64"  ;; \
         *)              echo ""       ;; esac) && \
     echo "Package ${PACKAGE} platform ${PACKAGEPLATFORM} version ${PACKAGEVERSION}" && \
     wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/duplicacy_linux_${PACKAGEPLATFORM}_${PACKAGEVERSION}" -qO /tmp/duplicacy
@@ -72,12 +72,12 @@ ENV BACKUP_CRON="" \
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        bash=5.2.26-r0 \
-        tzdata=2024b-r0 \
-        zip=3.0-r12 \
+        bash=5.2.37-r0 \
+        tzdata=2025a-r0 \
+        zip=3.0-r13 \
         ssmtp=2.64-r22 \
-        ca-certificates=20240705-r0 \
-        docker-cli=26.1.5-r0 \
+        ca-certificates=20241121-r1 \
+        docker-cli=27.3.1-r2 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

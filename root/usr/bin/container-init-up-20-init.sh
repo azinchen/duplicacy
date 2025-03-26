@@ -3,11 +3,6 @@
 config_dir=/config
 cd "$config_dir" || exit 128
 
-if [[ -f .duplicacy ]]; then
-    echo "This folder has already been initialized with duplicacy. Not initializing again"
-    exit 0
-fi
-
 params=""
 config_dir=/config
 data_dir=/data

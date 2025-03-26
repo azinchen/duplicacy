@@ -42,7 +42,7 @@ fi
 
 params="$params -pref-dir $config_dir -repository $data_dir $SNAPSHOT_ID $STORAGE_URL"
 
-duplicacy $GLOBAL_OPTIONS init $params
+eval duplicacy $GLOBAL_OPTIONS init $params
 exitcode=$?
 
 if [ $exitcode -ne 0 ]; then

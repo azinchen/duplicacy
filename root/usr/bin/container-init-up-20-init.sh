@@ -37,7 +37,11 @@ if [ $exitcode -ne 0 ]; then
     exit $exitcode
 fi
 
-if [[ ! -f $filters_file ]] && [[ -n "${FILTER_PATTERNS}" ]]; then
+if [[ -n "${FILTER_PATTERNS}" ]]; then
+    if [[ -f $filters_file ]]; then
+        rm -f $filters_file
+    fi
+    
     IFS=';'
     read -ra filters <<< "$FILTER_PATTERNS"
     for filter in "${filters[@]}"; do

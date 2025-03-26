@@ -8,6 +8,18 @@ config_dir=/config
 data_dir=/data
 filters_file=$config_dir/filters
 
+if [[ -n "${FILTER_PATTERNS}" ]]; then
+    if [[ -f $filters_file ]]; then
+        rm -f $filters_file
+    fi
+    
+    IFS=';'
+    read -ra filters <<< "$FILTER_PATTERNS"
+    for filter in "${filters[@]}"; do
+        echo "$filter" >> $filters_file
+    done
+fi
+
 if [[ -n ${DUPLICACY_PASSWORD} ]]; then
     params=-e
 fi
@@ -35,18 +47,6 @@ exitcode=$?
 
 if [ $exitcode -ne 0 ]; then
     exit $exitcode
-fi
-
-if [[ -n "${FILTER_PATTERNS}" ]]; then
-    if [[ -f $filters_file ]]; then
-        rm -f $filters_file
-    fi
-    
-    IFS=';'
-    read -ra filters <<< "$FILTER_PATTERNS"
-    for filter in "${filters[@]}"; do
-        echo "$filter" >> $filters_file
-    done
 fi
 
 exit 0

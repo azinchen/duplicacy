@@ -14,7 +14,7 @@ The Docker image `azinchen/duplicacy` is designed for automated backups by lever
 - Multi-versioning
 - And all the other features available in Duplicacy
 
-This image uses the [Duplicacy Command Line version][duplicacy-github] `3.2.4`.
+This image uses the [Duplicacy Command Line version][duplicacy-github] `3.2.5`.
 
 ## Supported Architectures
 

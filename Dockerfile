@@ -77,7 +77,7 @@ RUN echo "**** install security fix packages ****" && \
         zip=3.0-r13 \
         ssmtp=2.64-r22 \
         ca-certificates=20241121-r2 \
-        docker-cli=28.2.2-r0 \
+        docker-cli=28.3.0-r0 \
         && \
     echo "**** create folders ****" && \
     mkdir -p /config && \

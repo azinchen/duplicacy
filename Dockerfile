@@ -76,7 +76,7 @@ RUN echo "**** install security fix packages ****" && \
         tzdata=2025b-r0 \
         zip=3.0-r13 \
         ssmtp=2.64-r22 \
-        ca-certificates=20250619-r0 \
+        ca-certificates=20250911-r0 \
         docker-cli=28.3.3-r2 \
         && \
     echo "**** create folders ****" && \

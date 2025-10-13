@@ -1,0 +1,115 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: send-email-report
+# Purpose: Send email report with job results and logs
+# Description: Sends an email report with inline log preview and full log
+#              attachment (zipped) if email is configured
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="send-email-report"
+
+# Parse arguments
+log_dir="${1:-}"
+subject="${2:-}"
+exitcode="${3:-1}"
+
+# Exit early if email is not configured
+if [ -z "${email_smtp_server}" ] || [ -z "${email_to}" ]; then
+    log "${SCRIPT_NAME}" "Email not configured, skipping report"
+    exit 0
+fi
+
+# Check if we should skip success reports
+if [ "${send_report_level}" = "error" ] && [ "${exitcode}" -eq 0 ]; then
+    log "${SCRIPT_NAME}" "Skip sending success report (send_report_level=error)"
+    exit 0
+fi
+
+# Validate required parameters
+if [ -z "${log_dir}" ] || [ ! -d "${log_dir}" ]; then
+    log "${SCRIPT_NAME}" "No log directory provided or directory doesn't exist, skipping email"
+    exit 0
+fi
+
+log "${SCRIPT_NAME}" "Preparing email report: ${subject}"
+
+# Find log file (could be backup.log or prune.log)
+log_file=""
+if [ -f "${log_dir}/backup.log" ]; then
+    log_file="${log_dir}/backup.log"
+elif [ -f "${log_dir}/prune.log" ]; then
+    log_file="${log_dir}/prune.log"
+else
+    log "${SCRIPT_NAME}" "No log file found in ${log_dir}, skipping email"
+    rm -rf "${log_dir}"
+    exit 0
+fi
+
+mail_file="${log_dir}/mailbody.log"
+boundary="_====_boundary_====_$(date +%Y%m%d%H%M%S)_====_"
+
+# Build email headers
+{
+    printf "To: %s\n" "${email_to}"
+    printf "Subject: %s\n" "${subject}"
+    printf "Content-Type: multipart/mixed; boundary=\"%s\"\n" "${boundary}"
+    printf "Mime-Version: 1.0\n"
+    printf "\n"
+    printf -- "--%s\n" "${boundary}"
+    printf "\n"
+} > "${mail_file}"
+
+# Add log content to email body (with truncation if too long)
+log_lines="$(wc -l < "${log_file}")"
+max_lines=$((2 * email_log_lines_in_body))
+
+if [ "${log_lines}" -gt "${max_lines}" ]; then
+    {
+        head -n "${email_log_lines_in_body}" "${log_file}"
+        printf "...\n"
+        tail -n "${email_log_lines_in_body}" "${log_file}"
+    } >> "${mail_file}"
+    log "${SCRIPT_NAME}" "Log truncated: ${log_lines} lines, showing ${email_log_lines_in_body} from start and end"
+else
+    cat "${log_file}" >> "${mail_file}"
+    log "${SCRIPT_NAME}" "Full log included: ${log_lines} lines"
+fi
+
+printf "\n" >> "${mail_file}"
+
+# Create and attach zipped log file
+zip_log_file="${log_dir}/backuplog.zip"
+
+if zip -j "${zip_log_file}" "${log_file}" >/dev/null 2>&1; then
+    {
+        printf -- "--%s\n" "${boundary}"
+        printf "Content-Transfer-Encoding: base64\n"
+        printf "Content-Type: application/zip; name=backuplog.zip\n"
+        printf "Content-Disposition: attachment; filename=backuplog.zip\n"
+        printf "\n"
+        base64 "${zip_log_file}"
+        printf "\n"
+        printf -- "--%s--\n" "${boundary}"
+    } >> "${mail_file}"
+    log "${SCRIPT_NAME}" "Log file attached (zipped)"
+else
+    log "${SCRIPT_NAME}" "WARNING: Failed to create zip attachment"
+fi
+
+# Send email
+log "${SCRIPT_NAME}" "Sending email to ${email_to}"
+if ssmtp -F "${email_from_name}" "${email_to}" < "${mail_file}"; then
+    log "${SCRIPT_NAME}" "Email sent successfully"
+else
+    log "${SCRIPT_NAME}" "ERROR: Failed to send email"
+fi
+
+# Cleanup
+rm -rf "${log_dir}"
+
+exit 0

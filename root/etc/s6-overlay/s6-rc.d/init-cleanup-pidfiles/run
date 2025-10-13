@@ -1,0 +1,34 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: init-cleanup-pidfiles/run
+# Purpose: S6-overlay oneshot service to remove stale PID files
+# Description: Cleans up backup and prune PID files that may remain from
+#              ungraceful container shutdowns or restarts
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="init-cleanup-pidfiles"
+
+log "${SCRIPT_NAME}" "Checking for stale PID files..."
+
+# Check and remove backup PID file
+if [ -f "${backup_pid_file}" ]; then
+    log "${SCRIPT_NAME}" "Found stale backup PID file: ${backup_pid_file}"
+    rm "${backup_pid_file}"
+    log "${SCRIPT_NAME}" "Removed backup PID file"
+fi
+
+# Check and remove prune PID file
+if [ -f "${prune_pid_file}" ]; then
+    log "${SCRIPT_NAME}" "Found stale prune PID file: ${prune_pid_file}"
+    rm "${prune_pid_file}"
+    log "${SCRIPT_NAME}" "Removed prune PID file"
+fi
+
+log "${SCRIPT_NAME}" "PID file cleanup completed"
+
+exit 0

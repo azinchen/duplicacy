@@ -1,0 +1,68 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: init-configure-ssmtp/run
+# Purpose: S6-overlay oneshot service to configure SSMTP
+# Description: Sets up SSMTP configuration files based on environment variables
+#              for email notifications from backup and prune jobs
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="init-configure-ssmtp"
+
+log "${SCRIPT_NAME}" "Configuring SSMTP for email notifications..."
+
+ssmtp_conf_file="/etc/ssmtp/ssmtp.conf"
+revaliases_file="/etc/ssmtp/revaliases"
+
+# Create fresh configuration files
+rm -f "${ssmtp_conf_file}"
+touch "${ssmtp_conf_file}"
+
+rm -f "${revaliases_file}"
+touch "${revaliases_file}"
+
+# Always allow overriding the From line
+printf "FromLineOverride=YES\n" >> "${ssmtp_conf_file}"
+
+# Configure sender email address
+if [ -n "${email_from}" ]; then
+    printf "root:%s\n" "${email_from}" >> "${revaliases_file}"
+    log "${SCRIPT_NAME}" "Configured sender email: ${email_from}"
+fi
+
+# Configure TLS/SSL if enabled
+if [ -n "${email_use_tls}" ]; then
+    printf "UseSTARTTLS=YES\n" >> "${ssmtp_conf_file}"
+    printf "UseTLS=YES\n" >> "${ssmtp_conf_file}"
+    log "${SCRIPT_NAME}" "TLS/SSL enabled"
+fi
+
+# Configure mail server
+if [ -n "${email_smtp_server}" ]; then
+    if [ -n "${email_smtp_server_port}" ]; then
+        printf "mailhub=%s:%s\n" "${email_smtp_server}" "${email_smtp_server_port}" >> "${ssmtp_conf_file}"
+        log "${SCRIPT_NAME}" "SMTP server: ${email_smtp_server}:${email_smtp_server_port}"
+    else
+        printf "mailhub=%s\n" "${email_smtp_server}" >> "${ssmtp_conf_file}"
+        log "${SCRIPT_NAME}" "SMTP server: ${email_smtp_server}"
+    fi
+fi
+
+# Configure SMTP authentication
+if [ -n "${email_smtp_login}" ]; then
+    printf "AuthUser=%s\n" "${email_smtp_login}" >> "${ssmtp_conf_file}"
+    log "${SCRIPT_NAME}" "SMTP authentication configured for user: ${email_smtp_login}"
+fi
+
+if [ -n "${email_smtp_password}" ]; then
+    printf "AuthPass=%s\n" "${email_smtp_password}" >> "${ssmtp_conf_file}"
+    log "${SCRIPT_NAME}" "SMTP password configured"
+fi
+
+log "${SCRIPT_NAME}" "SSMTP configuration completed"
+
+exit 0

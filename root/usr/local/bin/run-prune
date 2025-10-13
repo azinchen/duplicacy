@@ -1,0 +1,100 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: run-prune
+# Purpose: Execute duplicacy prune operation with retention policies
+# Description: Removes old backup snapshots according to configured retention policies
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="run-prune"
+config_dir="/config"
+
+# Determine hostname for reporting
+if [ -n "${email_hostname_alias}" ]; then
+    hostname="${email_hostname_alias}"
+else
+    hostname="$(hostname)"
+fi
+
+# Setup logging
+log_dir=""
+log_file="/dev/null"
+
+if [ -n "${email_smtp_server}" ] && [ -n "${email_to}" ]; then
+    log_dir="$(mktemp -d)"
+    log_file="${log_dir}/prune.log"
+fi
+
+log "${SCRIPT_NAME}" "========== Run prune job at $(date) =========="
+echo "========== Run prune job at $(date) ==========" >> "${log_file}"
+
+# Check if another operation is in progress
+if operation_in_progress prune; then
+    duration=0
+    exitcode=127
+else
+    # Create PID file and set up trap for cleanup
+    create_prune_pid_file $$
+    trap remove_prune_pid_file INT TERM EXIT
+
+    # Apply random delay if configured
+    apply-delay "${log_file}"
+
+    start="$(date +%s)"
+
+    cd "${config_dir}" || {
+        log "${SCRIPT_NAME}" "ERROR: Cannot change to config directory ${config_dir}"
+        exit 128
+    }
+
+    # Build prune command with keep policies
+    command="${prune_options}"
+    
+    if [ -n "${prune_keep_policies}" ]; then
+        # Split policies by semicolon and build command
+        # POSIX sh compatible approach
+        oldIFS="${IFS}"
+        IFS=";"
+        for policy in ${prune_keep_policies}; do
+            if [ -n "${policy}" ]; then
+                command="${command} -keep ${policy}"
+            fi
+        done
+        IFS="${oldIFS}"
+    fi
+
+    log "${SCRIPT_NAME}" "Executing: duplicacy ${global_options} prune ${command}"
+    
+    # Execute prune command
+    if sh -c "duplicacy ${global_options} prune ${command}" >> "${log_file}" 2>&1; then
+        exitcode=0
+    else
+        exitcode=$?
+    fi
+
+    end="$(date +%s)"
+    duration=$((end - start))
+fi
+
+# Report results
+log_lines="$(wc -l < "${log_file}" 2>/dev/null || echo 0)"
+duration_str="$(converts "${duration}")"
+
+if [ "${exitcode}" -eq 0 ]; then
+    log "${SCRIPT_NAME}" "Prune COMPLETED, duration ${duration_str}, log size ${log_lines} lines"
+    echo "Prune COMPLETED, duration ${duration_str}, log size ${log_lines} lines" >> "${log_file}"
+    subject="duplicacy prune job id \"${hostname}:${snapshot_id}\" COMPLETED"
+else
+    log "${SCRIPT_NAME}" "Prune FAILED, code ${exitcode}, duration ${duration_str}, log size ${log_lines} lines"
+    echo "Prune FAILED, code ${exitcode}, duration ${duration_str}, log size ${log_lines} lines" >> "${log_file}"
+    subject="duplicacy prune job id \"${hostname}:${snapshot_id}\" FAILED"
+fi
+
+# Send email report if configured
+send-email-report "${log_dir}" "${subject}" "${exitcode}"
+
+exit "${exitcode}"

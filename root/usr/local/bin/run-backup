@@ -1,0 +1,84 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: run-backup
+# Purpose: Execute duplicacy backup operation
+# Description: Performs backup of configured data to the storage backend
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="run-backup"
+config_dir="/config"
+
+# Determine hostname for reporting
+if [ -n "${email_hostname_alias}" ]; then
+    hostname="${email_hostname_alias}"
+else
+    hostname="$(hostname)"
+fi
+
+# Setup logging
+log_dir=""
+log_file="/dev/null"
+
+if [ -n "${email_smtp_server}" ] && [ -n "${email_to}" ]; then
+    log_dir="$(mktemp -d)"
+    log_file="${log_dir}/backup.log"
+fi
+
+log "${SCRIPT_NAME}" "========== Run backup job at $(date) =========="
+echo "========== Run backup job at $(date) ==========" >> "${log_file}"
+
+# Check if another operation is in progress
+if operation_in_progress backup; then
+    duration=0
+    exitcode=127
+else
+    # Create PID file and set up trap for cleanup
+    create_backup_pid_file $$
+    trap remove_backup_pid_file INT TERM EXIT
+
+    # Apply random delay if configured
+    apply-delay "${log_file}"
+
+    start="$(date +%s)"
+
+    cd "${config_dir}" || {
+        log "${SCRIPT_NAME}" "ERROR: Cannot change to config directory ${config_dir}"
+        exit 128
+    }
+
+    log "${SCRIPT_NAME}" "Executing: duplicacy ${global_options} backup ${backup_options}"
+    
+    # Execute backup command
+    if sh -c "duplicacy ${global_options} backup ${backup_options}" >> "${log_file}" 2>&1; then
+        exitcode=0
+    else
+        exitcode=$?
+    fi
+
+    end="$(date +%s)"
+    duration=$((end - start))
+fi
+
+# Report results
+log_lines="$(wc -l < "${log_file}" 2>/dev/null || echo 0)"
+duration_str="$(converts "${duration}")"
+
+if [ "${exitcode}" -eq 0 ]; then
+    log "${SCRIPT_NAME}" "Backup COMPLETED, duration ${duration_str}, log size ${log_lines} lines"
+    echo "Backup COMPLETED, duration ${duration_str}, log size ${log_lines} lines" >> "${log_file}"
+    subject="duplicacy backup job id \"${hostname}:${snapshot_id}\" COMPLETED"
+else
+    log "${SCRIPT_NAME}" "Backup FAILED, code ${exitcode}, duration ${duration_str}, log size ${log_lines} lines"
+    echo "Backup FAILED, code ${exitcode}, duration ${duration_str}, log size ${log_lines} lines" >> "${log_file}"
+    subject="duplicacy backup job id \"${hostname}:${snapshot_id}\" FAILED"
+fi
+
+# Send email report if configured
+send-email-report "${log_dir}" "${subject}" "${exitcode}"
+
+exit "${exitcode}"

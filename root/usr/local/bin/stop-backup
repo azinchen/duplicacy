@@ -1,0 +1,51 @@
+#!/command/with-contenv bash
+# shellcheck shell=sh
+
+# Script: stop-backup
+# Purpose: Gracefully stop a running duplicacy backup process
+# Description: Sends SIGINT (Ctrl+C) to allow duplicacy to safely resume from
+#              the current progress when the next backup runs
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+# Script name for logging
+SCRIPT_NAME="stop-backup"
+
+# Function to find duplicacy backup process ID
+find_backup_process() {
+    pgrep -f "duplicacy backup" 2>/dev/null || true
+}
+
+# Main execution
+log "${SCRIPT_NAME}" "Checking for running duplicacy backup process..."
+
+backup_pid=$(find_backup_process)
+
+if [ -z "${backup_pid}" ]; then
+    log "${SCRIPT_NAME}" "No active backup process found - nothing to stop"
+    exit 0
+fi
+
+log "${SCRIPT_NAME}" "Found backup process (PID: ${backup_pid})"
+log "${SCRIPT_NAME}" "Sending SIGINT to gracefully stop backup..."
+
+if kill -INT "${backup_pid}" 2>/dev/null; then
+    log "${SCRIPT_NAME}" "Stop signal sent successfully"
+    log "${SCRIPT_NAME}" "Backup will resume from current progress on next run"
+    
+    # Wait briefly to confirm process is stopping
+    sleep 2
+    if [ -z "$(find_backup_process)" ]; then
+        log "${SCRIPT_NAME}" "Backup process stopped successfully"
+    else
+        log "${SCRIPT_NAME}" "Backup process is shutting down..."
+    fi
+else
+    log "${SCRIPT_NAME}" "ERROR: Failed to send stop signal to process ${backup_pid}"
+    exit 1
+fi
+
+exit 0

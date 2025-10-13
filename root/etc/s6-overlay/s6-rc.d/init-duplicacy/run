@@ -1,0 +1,92 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: init-duplicacy/run
+# Purpose: S6-overlay oneshot service to initialize duplicacy repository
+# Description: Initializes duplicacy repository with storage backend configuration,
+#              encryption settings, and filter patterns if not already initialized
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="init-duplicacy"
+
+log "${SCRIPT_NAME}" "Initializing duplicacy repository..."
+
+config_dir="/config"
+data_dir="/data"
+filters_file="${config_dir}/filters"
+
+# Change to config directory
+cd "${config_dir}" || {
+    log "${SCRIPT_NAME}" "ERROR: Cannot change to config directory ${config_dir}"
+    exit 128
+}
+
+# Configure filter patterns if specified
+if [ -n "${filter_patterns}" ]; then
+    log "${SCRIPT_NAME}" "Configuring filter patterns..."
+    
+    # Remove existing filters file
+    rm -f "${filters_file}"
+    
+    # Parse semicolon-separated filter patterns (POSIX sh compatible)
+    oldIFS="${IFS}"
+    IFS=";"
+    for filter in ${filter_patterns}; do
+        if [ -n "${filter}" ]; then
+            printf "%s\n" "${filter}" >> "${filters_file}"
+        fi
+    done
+    IFS="${oldIFS}"
+    
+    log "${SCRIPT_NAME}" "Filter patterns configured"
+fi
+
+# Build duplicacy init parameters
+params=""
+
+# Add encryption flag if password is set
+if [ -n "${duplicacy_password}" ]; then
+    params="-e"
+    log "${SCRIPT_NAME}" "Encryption enabled"
+fi
+
+# Add custom init options
+if [ -n "${init_options}" ]; then
+    params="${params} ${init_options}"
+fi
+
+# Add chunk size parameters
+if [ -n "${chunk_size}" ]; then
+    params="${params} -chunk-size ${chunk_size}"
+    log "${SCRIPT_NAME}" "Chunk size: ${chunk_size}"
+fi
+
+if [ -n "${max_chunk_size}" ]; then
+    params="${params} -max-chunk-size ${max_chunk_size}"
+    log "${SCRIPT_NAME}" "Max chunk size: ${max_chunk_size}"
+fi
+
+if [ -n "${min_chunk_size}" ]; then
+    params="${params} -min-chunk-size ${min_chunk_size}"
+    log "${SCRIPT_NAME}" "Min chunk size: ${min_chunk_size}"
+fi
+
+# Add required parameters
+params="${params} -pref-dir ${config_dir} -repository ${data_dir} ${snapshot_id} ${storage_url}"
+
+# Execute duplicacy init
+log "${SCRIPT_NAME}" "Executing: duplicacy ${global_options} init ${params}"
+
+if eval duplicacy ${global_options} init ${params}; then
+    log "${SCRIPT_NAME}" "Duplicacy repository initialized successfully"
+    exitcode=0
+else
+    exitcode=$?
+    log "${SCRIPT_NAME}" "ERROR: Duplicacy initialization failed with code ${exitcode}"
+fi
+
+exit "${exitcode}"

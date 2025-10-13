@@ -1,0 +1,57 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: once-run-jobs/run
+# Purpose: S6-overlay oneshot service to run backup/prune jobs immediately
+# Description: Executes backup and prune jobs once at container startup if
+#              RUN_JOB_IMMEDIATELY is set to 'yes'
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="once-run-jobs"
+
+exitcode=0
+
+# Check if immediate execution is requested (case-insensitive)
+run_immediately_lower="$(echo "${run_job_immediately}" | tr '[:upper:]' '[:lower:]')"
+
+if [ "${run_immediately_lower}" = "yes" ]; then
+    log "${SCRIPT_NAME}" "RUN_JOB_IMMEDIATELY is enabled, running jobs now..."
+    
+    # Run backup if configured
+    if [ -n "${backup_cron}" ]; then
+        log "${SCRIPT_NAME}" "Starting immediate backup job..."
+        if run-backup; then
+            log "${SCRIPT_NAME}" "Backup job completed successfully"
+        else
+            exitcode=$?
+            log "${SCRIPT_NAME}" "Backup job failed with code ${exitcode}"
+        fi
+    else
+        log "${SCRIPT_NAME}" "No backup job configured, skipping"
+    fi
+    
+    # Run prune if configured and backup succeeded
+    if [ -n "${prune_cron}" ] && [ "${exitcode}" -eq 0 ]; then
+        log "${SCRIPT_NAME}" "Starting immediate prune job..."
+        if run-prune; then
+            log "${SCRIPT_NAME}" "Prune job completed successfully"
+        else
+            exitcode=$?
+            log "${SCRIPT_NAME}" "Prune job failed with code ${exitcode}"
+        fi
+    elif [ -n "${prune_cron}" ]; then
+        log "${SCRIPT_NAME}" "Skipping prune job due to backup failure"
+    else
+        log "${SCRIPT_NAME}" "No prune job configured, skipping"
+    fi
+    
+    log "${SCRIPT_NAME}" "Immediate job execution completed"
+else
+    log "${SCRIPT_NAME}" "RUN_JOB_IMMEDIATELY is not enabled, skipping immediate execution"
+fi
+
+exit "${exitcode}"

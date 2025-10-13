@@ -1,0 +1,118 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Shared variables
+backup_pid_file=/var/run/duplicacy_backup.pid
+prune_pid_file=/var/run/duplicacy_prune.pid
+
+# Environment variable copies with defaults
+email_hostname_alias="${EMAIL_HOSTNAME_ALIAS:-}"
+email_smtp_server="${EMAIL_SMTP_SERVER:-}"
+email_smtp_server_port="${EMAIL_SMTP_SERVER_PORT:-}"
+email_smtp_login="${EMAIL_SMTP_LOGIN:-}"
+email_smtp_password="${EMAIL_SMTP_PASSWORD:-}"
+email_use_tls="${EMAIL_USE_TLS:-}"
+email_from="${EMAIL_FROM:-}"
+email_to="${EMAIL_TO:-}"
+email_from_name="${EMAIL_FROM_NAME:-duplicacy}"
+email_log_lines_in_body="${EMAIL_LOG_LINES_IN_BODY:-100}"
+send_report_level="${SEND_REPORT_LEVEL:-all}"
+
+global_options="${GLOBAL_OPTIONS:-}"
+backup_options="${BACKUP_OPTIONS:-}"
+prune_options="${PRUNE_OPTIONS:-}"
+prune_keep_policies="${PRUNE_KEEP_POLICIES:-}"
+
+backup_cron="${BACKUP_CRON:-}"
+prune_cron="${PRUNE_CRON:-}"
+backup_end_cron="${BACKUP_END_CRON:-}"
+
+run_job_immediately="${RUN_JOB_IMMEDIATELY:-no}"
+job_random_delay="${JOB_RANDOM_DELAY:-0}"
+snapshot_id="${SNAPSHOT_ID:-}"
+
+# Additional environment variables
+duplicacy_password="${DUPLICACY_PASSWORD:-}"
+init_options="${INIT_OPTIONS:-}"
+chunk_size="${CHUNK_SIZE:-}"
+max_chunk_size="${MAX_CHUNK_SIZE:-}"
+min_chunk_size="${MIN_CHUNK_SIZE:-}"
+filter_patterns="${FILTER_PATTERNS:-}"
+storage_url="${STORAGE_URL:-}"
+
+# Common functions
+
+# Log function with timestamp and script name
+# Usage: log "script-name" "message"
+log()
+{
+    script_name="${1:-unknown}"
+    shift
+    printf "[%s] [%s] %s\n" "$(date +'%Y-%m-%d %H:%M:%S')" "${script_name}" "$*"
+}
+
+converts()
+{
+    T=$1
+    D=$((T/60/60/24))
+    H=$((T/60/60%24))
+    M=$((T/60%60))
+    S=$((T%60))
+
+    if [[ ${D} != 0 ]]; then
+        if [[ $D -eq "1" ]]; then
+            printf '%d day %02d:%02d:%02d' $D $H $M $S
+        else
+            printf '%d days %02d:%02d:%02d' $D $H $M $S
+        fi
+    else
+        printf '%02d:%02d:%02d' $H $M $S
+    fi
+}
+
+create_backup_pid_file()
+{
+    # Expect PID as the first parameter
+    pid=${1}
+    echo Creating backup pid file, "${backup_pid_file}", with pid="${pid}" | tee -a "$log_file"
+    echo "${pid}" > "${backup_pid_file}"
+}
+
+remove_backup_pid_file()
+{
+    echo Removing backup pid file, "${backup_pid_file}"
+    rm "${backup_pid_file}"
+}
+
+create_prune_pid_file()
+{
+    # Expect PID as the first parameter
+    pid=${1}
+    echo Creating prune pid file, "${prune_pid_file}", with pid="${pid}" | tee -a "$log_file"
+    echo "${pid}" > "${prune_pid_file}"
+}
+
+remove_prune_pid_file()
+{
+    echo Removing prune pid file, "${prune_pid_file}"
+    rm "${prune_pid_file}"
+}
+
+operation_in_progress()
+{
+    # Expect the name of the operation as the first parameter
+    operation=${1}
+
+    if [ -f "${backup_pid_file}" ] && [ ! -z "$(cat ${backup_pid_file})" -a -e /proc/$(cat ${backup_pid_file}) ]; then
+        echo A backup is in progress with PID="$(cat ${backup_pid_file})". Skipping "${operation}" | tee -a "$log_file"
+        return 0
+    fi
+
+    if [ -f "${prune_pid_file}" ] && [ ! -z "$(cat ${prune_pid_file})" -a -e /proc/$(cat ${prune_pid_file}) ]; then
+        echo A prune is in progress with PID="$(cat ${prune_pid_file})". Skipping "${operation}" | tee -a "$log_file"
+        return 0
+    fi
+
+    # No operation in progress
+    return 127
+}

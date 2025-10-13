@@ -1,0 +1,32 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: apply-delay
+# Purpose: Apply a random delay before starting a backup/prune job
+# Description: Introduces a random delay (if configured) to avoid multiple
+#              containers starting jobs simultaneously
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="apply-delay"
+log_file="${1:-/dev/null}"
+
+# Check if random delay is configured and non-zero
+if [ -n "${job_random_delay}" ] && [ "${job_random_delay}" -ne 0 ]; then
+    # Generate random delay between 1 and job_random_delay seconds
+    # POSIX sh compatible: use awk for random number generation
+    delay=$(awk -v max="${job_random_delay}" 'BEGIN { srand(); print int(rand() * (max - 1)) + 1 }')
+    
+    delay_str="$(converts "${delay}")"
+    log "${SCRIPT_NAME}" "Job delayed by ${delay_str}"
+    echo "Job delayed by ${delay_str}" >> "${log_file}"
+    
+    sleep "${delay}"
+else
+    log "${SCRIPT_NAME}" "No delay configured, starting immediately"
+fi
+
+exit 0

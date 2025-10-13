@@ -3,7 +3,6 @@ FROM alpine:3.22.2 AS s6-builder
 
 ENV PACKAGE="just-containers/s6-overlay"
 ENV PACKAGEVERSION="3.2.1.0"
-ARG TARGETPLATFORM
 
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
@@ -14,16 +13,19 @@ RUN echo "**** install security fix packages ****" && \
     echo "**** create folders ****" && \
     mkdir -p /s6 && \
     echo "**** download ${PACKAGE} ****" && \
-    PACKAGEPLATFORM=$(case ${TARGETPLATFORM} in \
-        "linux/386")      echo "i486"     ;; \
-        "linux/amd64")    echo "x86_64"   ;; \
-        "linux/arm/v6")   echo "arm"      ;; \
-        "linux/arm/v7")   echo "armhf"    ;; \
-        "linux/arm64")    echo "aarch64"  ;; \
-        *)                echo ""         ;; esac) && \
+    s6_arch=$(case $(uname -m) in \
+        i?86)           echo "i486"        ;; \
+        x86_64)         echo "x86_64"      ;; \
+        aarch64)        echo "aarch64"     ;; \
+        armv6l)         echo "arm"         ;; \
+        armv7l)         echo "armhf"       ;; \
+        ppc64le)        echo "powerpc64le" ;; \
+        riscv64)        echo "riscv64"     ;; \
+        s390x)          echo "s390x"       ;; \
+        *)              echo ""            ;; esac) && \
     echo "Package ${PACKAGE} platform ${PACKAGEPLATFORM} version ${PACKAGEVERSION}" && \
     wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/s6-overlay-noarch.tar.xz" -qO /tmp/s6-overlay-noarch.tar.xz && \
-    wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/s6-overlay-${PACKAGEPLATFORM}.tar.xz" -qO /tmp/s6-overlay-binaries.tar.xz && \
+    wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/s6-overlay-${s6_arch}.tar.xz" -qO /tmp/s6-overlay-binaries.tar.xz && \
     tar -C /s6/ -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
     tar -C /s6/ -Jxpf /tmp/s6-overlay-binaries.tar.xz
 
@@ -36,15 +38,15 @@ ARG TARGETPLATFORM
 
 RUN echo "**** install security fix packages ****" && \
     echo "**** download ${PACKAGE} ****" && \
-    PACKAGEPLATFORM=$(case ${TARGETPLATFORM} in \
-        "linux/386")    echo "i386"   ;; \
-        "linux/amd64")  echo "x64"    ;; \
-        "linux/arm/v6") echo "arm"    ;; \
-        "linux/arm/v7") echo "arm"    ;; \
-        "linux/arm64")  echo "arm64"  ;; \
-        *)              echo ""       ;; esac) && \
-    echo "Package ${PACKAGE} platform ${PACKAGEPLATFORM} version ${PACKAGEVERSION}" && \
-    wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/duplicacy_linux_${PACKAGEPLATFORM}_${PACKAGEVERSION}" -qO /tmp/duplicacy
+    duplicacy_arch=$(case $(uname -m) in \
+        i?86)           echo "i386"        ;; \
+        x86_64)         echo "x64"         ;; \
+        aarch64)        echo "arm64"       ;; \
+        armv6l)         echo "arm"         ;; \
+        armv7l)         echo "arm"         ;; \
+        *)              echo ""            ;; esac) && \
+    echo "Package ${PACKAGE} platform ${duplicacy_arch} version ${PACKAGEVERSION}" && \
+    wget -q "https://github.com/${PACKAGE}/releases/download/v${PACKAGEVERSION}/duplicacy_linux_${duplicacy_arch}_${PACKAGEVERSION}" -qO /tmp/duplicacy
 
 # rootfs builder
 FROM alpine:3.22.2 AS rootfs-builder
@@ -53,8 +55,10 @@ RUN echo "**** install security fix packages ****" && \
     echo "**** end run statement ****"
 
 COPY root/ /rootfs/
-COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/bin/duplicacy
-RUN chmod +x /rootfs/usr/bin/*
+COPY --from=duplicacy-builder /tmp/duplicacy /rootfs/usr/local/bin/duplicacy
+RUN chmod +x /rootfs/usr/local/bin/* || true && \
+    chmod +x /rootfs/etc/s6-overlay/s6-rc.d/*/run  || true && \
+    chmod +x /rootfs/etc/s6-overlay/s6-rc.d/*/finish || true
 COPY --from=s6-builder /s6/ /rootfs/
 
 # Main image
@@ -62,17 +66,11 @@ FROM alpine:3.22.2
 
 LABEL maintainer="Alexander Zinchenko <alexander@zinchenko.com>"
 
-ENV BACKUP_CRON="" \
-    SNAPSHOT_ID="" \
-    STORAGE_URL="" \
-    EMAIL_LOG_LINES_IN_BODY=10 \
-    SEND_REPORT_LEVEL="all" \
-    S6_CMD_WAIT_FOR_SERVICES_MAXTIME=120000
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=120000
 
 RUN echo "**** install security fix packages ****" && \
     echo "**** install mandatory packages ****" && \
     apk --no-cache --no-progress add \
-        bash=5.2.37-r0 \
         tzdata=2025b-r0 \
         zip=3.0-r13 \
         ssmtp=2.64-r22 \

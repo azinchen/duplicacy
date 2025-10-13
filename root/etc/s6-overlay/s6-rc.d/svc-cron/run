@@ -1,0 +1,17 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: svc-cron/run
+# Purpose: Start the cron daemon service
+# Description: Runs crond in foreground mode for s6-overlay supervision
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+log "svc-cron" "Starting crond service..."
+
+# Run crond in foreground mode (-f) so s6-overlay can supervise it
+# -L /dev/stdout: Log to stdout for container logging
+exec crond -f -L /dev/stdout

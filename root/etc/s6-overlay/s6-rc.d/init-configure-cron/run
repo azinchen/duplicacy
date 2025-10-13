@@ -1,0 +1,50 @@
+#!/command/with-contenv sh
+# shellcheck shell=sh
+
+# Script: init-configure-cron/run
+# Purpose: S6-overlay oneshot service to configure cron jobs
+# Description: Creates crontab entries for backup, prune, and stop-backup
+#              operations based on environment variables
+
+# Source shared functions and variables
+. /usr/local/bin/backend-functions
+
+set -eu
+
+SCRIPT_NAME="init-configure-cron"
+
+log "${SCRIPT_NAME}" "Configuring cron jobs..."
+
+cron_file="/var/spool/cron/crontabs/root"
+
+# Create fresh cron file
+rm -f "${cron_file}"
+touch "${cron_file}"
+
+# Configure backup cron job
+if [ -n "${backup_cron}" ]; then
+    printf "%s run-backup\n" "${backup_cron}" >> "${cron_file}"
+    log "${SCRIPT_NAME}" "Backup job scheduled: ${backup_cron}"
+else
+    log "${SCRIPT_NAME}" "No backup schedule configured"
+fi
+
+# Configure prune cron job
+if [ -n "${prune_cron}" ]; then
+    printf "%s run-prune\n" "${prune_cron}" >> "${cron_file}"
+    log "${SCRIPT_NAME}" "Prune job scheduled: ${prune_cron}"
+else
+    log "${SCRIPT_NAME}" "No prune schedule configured"
+fi
+
+# Configure backup stop cron job
+if [ -n "${backup_end_cron}" ]; then
+    printf "%s stop-backup\n" "${backup_end_cron}" >> "${cron_file}"
+    log "${SCRIPT_NAME}" "Backup stop scheduled: ${backup_end_cron}"
+else
+    log "${SCRIPT_NAME}" "No backup stop schedule configured"
+fi
+
+log "${SCRIPT_NAME}" "Cron configuration completed"
+
+exit 0

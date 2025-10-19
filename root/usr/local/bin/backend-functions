@@ -40,6 +40,10 @@ min_chunk_size="${MIN_CHUNK_SIZE:-}"
 filter_patterns="${FILTER_PATTERNS:-}"
 storage_url="${STORAGE_URL:-}"
 
+# Common paths
+config_dir="/config"
+data_dir="/data"
+
 # Common functions
 
 # Log function with timestamp and script name

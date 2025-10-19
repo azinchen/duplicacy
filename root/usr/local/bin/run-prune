@@ -11,7 +11,6 @@
 set -eu
 
 SCRIPT_NAME="run-prune"
-config_dir="/config"
 
 # Determine hostname for reporting
 if [ -n "${email_hostname_alias}" ]; then

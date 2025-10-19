@@ -15,8 +15,6 @@ SCRIPT_NAME="init-duplicacy"
 
 log "${SCRIPT_NAME}" "Initializing duplicacy repository..."
 
-config_dir="/config"
-data_dir="/data"
 filters_file="${config_dir}/filters"
 
 # Change to config directory

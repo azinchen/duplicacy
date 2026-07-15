@@ -2,7 +2,7 @@
 FROM alpine:3.23.4 AS s6-builder
 
 ENV PACKAGE="just-containers/s6-overlay"
-ENV PACKAGEVERSION="3.2.3.0"
+ENV PACKAGEVERSION="3.2.3.1"
 ARG TARGETPLATFORM
 
 RUN echo "**** install security fix packages ****" && \

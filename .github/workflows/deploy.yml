@@ -76,25 +76,11 @@ jobs:
             ${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:latest
 
-      - name: Run Snyk to check Docker image for vulnerabilities
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: '${{ github.repository }}:${{ env.image_tag }}'
-          args: --file=Dockerfile
-
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v4.37.4
-        with:
-          sarif_file: snyk.sarif
-
       - name: Update repo description
         if: ${{ env.is_tag == 'true' }}
         uses: peter-evans/dockerhub-description@v5.0.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: ${{ github.repository }}
           short-description: ${{ github.event.repository.description }}

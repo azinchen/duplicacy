@@ -27,6 +27,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8.1.1
         with:
+          token: ${{ secrets.PR_PAT }}
           branch: apkupdaterbot/packageversionupdate
           commit-message: Update APK package version, date ${{ env.template_date }}
           delete-branch: true

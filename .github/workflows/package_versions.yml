@@ -37,6 +37,7 @@ jobs:
       - name: Create Pull Request, Bump ${{ matrix.repository }} to ${{ env.package_version }}
         uses: peter-evans/create-pull-request@v8.1.1
         with:
+          token: ${{ secrets.PR_PAT }}
           branch: ${{ env.branch_name }}
           commit-message: Bump ${{ matrix.repository }} to ${{ env.package_version }}
           delete-branch: true
